@@ -8,8 +8,8 @@ import { UserDTO } from './user.dto';
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  async create({ name, username, password, isAdmin = false }: UserDTO) {
-    const userAlreadyExists = await this.prisma.user.findUnique({
+  async create({ email, username, password, perfilId }: UserDTO) {
+    const userAlreadyExists = await this.prisma.usuario.findUnique({
       where: {
         username,
       },
@@ -19,23 +19,22 @@ export class UserService {
       throw new AppError('Username already used');
     }
 
-    const passwordHash = await hash(password, 8);
+    const passwordHash = await hash(password, 8);    
 
-    const user = await this.prisma.user.create({
+    const user = await this.prisma.usuario.create({
       data: {
-        name,
+        email,
         username,
         password: passwordHash,
-        isAdmin,
+        perfilId,
       },
     });
 
     return {
       id: user.id,
-      name: user.name,
+      email: user.email,
       username: user.username,
-      isAdmin: user.isAdmin,
-      created_at: user.created_at,
+      perfilId: user.perfilId,
     };
   }
 }

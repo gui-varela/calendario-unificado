@@ -10,7 +10,7 @@ export class SessionsService {
   constructor(private prisma: PrismaService) {}
 
   async create({ username, password }: SessionDTO) {
-    const user = await this.prisma.user.findUnique({
+    const user = await this.prisma.usuario.findUnique({
       where: {
         username,
       },
@@ -33,7 +33,7 @@ export class SessionsService {
 
     const userReturn = {
       user: {
-        name: user.name,
+        password: user.email,
         username: user.username,
       },
     };
@@ -41,7 +41,8 @@ export class SessionsService {
     const session = await this.prisma.session.create({
       data: {
         token,
-        userId: user.id,
+        usuarioId: user.id,
+        
       },
     });
 
