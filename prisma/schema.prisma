@@ -16,7 +16,7 @@ model Usuario {
   username    String       @unique
   password    String
   perfil      Perfil       @relation(fields: [perfilId], references: [id])
-  perfilId    String       @unique @db.Uuid
+  perfilId    String       @db.Uuid
   disciplinas Disciplina[]
   sessions    Session[]
 }
@@ -32,7 +32,7 @@ model Perfil {
   id      String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   codigo  String
   nome    String
-  usuario Usuario?
+  usuario Usuario[]
 }
 
 model Disciplina {
