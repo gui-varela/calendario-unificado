@@ -1,0 +1,61 @@
+import { Injectable } from '@nestjs/common';
+import { hash } from 'bcrypt';
+import { AppError } from 'src/errors/AppError';
+import { PrismaService } from '../../../database/PrismaService';
+import { DisciplinaDTO } from './disciplina.dto';
+
+@Injectable()
+export class DisciplinaService {
+  constructor(private prisma: PrismaService) { }
+
+  async create({ nome, codigo, usuarioCriadorId }: DisciplinaDTO) {
+    const disciplinaAlreadyExists = await this.prisma.disciplina.findUnique({
+      where: {
+        codigo
+      }
+    });
+
+    if (disciplinaAlreadyExists) {
+      throw new AppError('Disciplina já existe');
+    }
+
+    const existeProfessor = await this.prisma.usuario.findUnique({
+      where: {
+        id: usuarioCriadorId
+      }
+    });
+
+    if (!existeProfessor) {
+      throw new AppError('Não existe professor');
+    }
+
+    const disciplina = await this.prisma.disciplina.create({
+      data: {
+        nome,
+        codigo,
+        usuarioCriadorId
+      }
+    });
+
+    return disciplina;
+  }
+
+  async update({ nome, codigo, usuarioCriadorId }: DisciplinaDTO) {
+    const disciplina = await this.prisma.disciplina.update({
+      where: {
+        codigo: codigo
+      },
+      data: {
+        nome,
+        codigo,
+        usuarioCriadorId
+      }
+    });
+
+    return disciplina;
+  }
+
+  async remove({ nome, codigo, usuarioCriadorId }: DisciplinaDTO) {
+
+  }
+}

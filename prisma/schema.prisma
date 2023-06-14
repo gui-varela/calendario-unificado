@@ -25,11 +25,11 @@ model Session {
   sessionId String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   token     String
   usuario   Usuario @relation(fields: [usuarioId], references: [id])
-  usuarioId String  @unique @db.Uuid
+  usuarioId String  @db.Uuid
 }
 
 model Perfil {
-  id      String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id      String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   codigo  String
   nome    String
   usuario Usuario[]
@@ -37,7 +37,8 @@ model Perfil {
 
 model Disciplina {
   id               String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title            String
+  codigo           String         @unique
+  nome             String
   usuarioCriador   Usuario        @relation(fields: [usuarioCriadorId], references: [id])
   usuarioCriadorId String         @unique @db.Uuid
   Prova            Prova[]

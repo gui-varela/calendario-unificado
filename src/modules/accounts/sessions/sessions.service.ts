@@ -42,7 +42,6 @@ export class SessionsService {
       data: {
         token,
         usuarioId: user.id,
-        
       },
     });
 
