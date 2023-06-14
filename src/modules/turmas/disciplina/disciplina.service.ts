@@ -41,6 +41,16 @@ export class DisciplinaService {
   }
 
   async update({ nome, codigo, usuarioCriadorId }: DisciplinaDTO) {
+    const disciplinaExists = await this.prisma.disciplina.findUnique({
+      where: {
+        codigo
+      }
+    });
+
+    if (!disciplinaExists) {
+      throw new AppError('Disciplina não existe');
+    }
+
     const disciplina = await this.prisma.disciplina.update({
       where: {
         codigo: codigo
