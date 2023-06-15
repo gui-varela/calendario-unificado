@@ -76,4 +76,35 @@ export class ProvaService {
 
     return prova;
   }
+
+  async remove({ nome, data, disciplinaId }: ProvaDTO) {
+    const disciplinaExists = await this.prisma.disciplina.findUnique({
+      where: {
+        id: disciplinaId
+      }
+    });
+
+    if (!disciplinaExists) {
+      throw new AppError('Disciplina não existe');
+    }
+
+    const provaMarcada = await this.prisma.prova.findFirst({
+      where: {
+        disciplinaId: disciplinaId,
+        nome: nome
+      }
+    });
+
+    if (!provaMarcada) {
+      throw new AppError('Essa prova não existe');
+    }
+
+    const prova = await this.prisma.prova.delete({
+      where: {
+        id: provaMarcada.id
+      }
+    });
+
+    return prova;
+  }
 }
