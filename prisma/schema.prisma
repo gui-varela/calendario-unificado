@@ -26,7 +26,7 @@ model Session {
   sessionId String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   token     String
   usuario   Usuario @relation(fields: [usuarioId], references: [id])
-  usuarioId String  @db.Uuid
+  usuarioId String  @db.Uuid @unique
 }
 
 model Perfil {
