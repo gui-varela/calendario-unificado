@@ -6,6 +6,7 @@ import { SessionsModule } from './modules/accounts/sessions/sessions.module';
 import { DisciplinaModule } from './modules/turmas/disciplina/disciplina.module';
 import { ProvaModule } from './modules/turmas/prova/prova.module';
 import { AlunoModule } from './modules/perfis/aluno/aluno.module';
+import { ProfessorModule } from './modules/perfis/professor/professor.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { AlunoModule } from './modules/perfis/aluno/aluno.module';
     DisciplinaModule,
     ProvaModule,
     AlunoModule,
+    ProfessorModule,
   ],
   controllers: [AppController],
   providers: [AppService],
