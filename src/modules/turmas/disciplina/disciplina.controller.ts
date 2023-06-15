@@ -4,7 +4,6 @@ import {
   Get,
   Post,
   Put,
-  Get,
 } from '@nestjs/common/decorators/http/request-mapping.decorator';
 
 import { DisciplinaDTO } from './disciplina.dto';

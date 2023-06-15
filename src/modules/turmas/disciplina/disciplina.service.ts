@@ -6,7 +6,7 @@ import { DisciplinaAlunoDTO } from './disciplina-aluno.dto';
 
 @Injectable()
 export class DisciplinaService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   public async isProfessor(id: string) {
     const perfil = await this.prisma.perfil.findUnique({
@@ -112,7 +112,7 @@ export class DisciplinaService {
 
   async findDisciplinasPorUsuario(username: string) {
     let disciplinas;
-    const usuario = await this.prisma.usuario.findUniqueOrThrow({
+    const usuario = await this.prisma.usuario.findUnique({
       where: {
         username,
       },
@@ -153,7 +153,7 @@ export class DisciplinaService {
   }
 
   async addDisciplinaAoAluno({ username, disciplinaId }: DisciplinaAlunoDTO) {
-    const usuario = await this.prisma.usuario.findUniqueOrThrow({
+    const usuario = await this.prisma.usuario.findUnique({
       where: {
         username,
       },
@@ -202,7 +202,7 @@ export class DisciplinaService {
     username,
     disciplinaId,
   }: DisciplinaAlunoDTO) {
-    const usuario = await this.prisma.usuario.findUniqueOrThrow({
+    const usuario = await this.prisma.usuario.findUnique({
       where: {
         username,
       },
