@@ -7,23 +7,27 @@ export class AlunoService {
   constructor(private prisma: PrismaService) {}
 
   async findAlunoPorUsuarioId(usuarioId: string) {
-    const aluno = await this.prisma.aluno.findUniqueOrThrow({
+    const aluno = await this.prisma.aluno.findUnique({
       where: {
         usuarioId,
       },
     });
 
     if (!aluno) {
-      throw new AppError('Usuário não existe');
+      throw new AppError('Aluno não existe');
     }
 
-    const usuario = await this.prisma.usuario.findUniqueOrThrow({
+    const usuario = await this.prisma.usuario.findUnique({
       where: {
         id: usuarioId,
       },
     });
 
-    const ID_PERFIL_ALUNO = 'd75a712e-1879-4da7-a4ac-f9950fc239f4';
+    if (!usuario) {
+      throw new AppError('Usuário não existe');
+    }
+
+    const ID_PERFIL_ALUNO = '3f40be47-c0ca-4512-8e13-5e407b52aa93';
 
     const isUsuarioAluno = usuario.perfilId === ID_PERFIL_ALUNO;
 

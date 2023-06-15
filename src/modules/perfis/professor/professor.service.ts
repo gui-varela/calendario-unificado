@@ -7,19 +7,23 @@ export class ProfessorService {
   constructor(private prisma: PrismaService) {}
 
   async findProfessorPorUsuarioId(usuarioId: string) {
-    const professor = await this.prisma.professor.findUniqueOrThrow({
+    const professor = await this.prisma.professor.findUnique({
       where: {
         usuarioId,
       },
     });
 
-    const usuario = await this.prisma.usuario.findUniqueOrThrow({
+    if (!professor) {
+      throw new AppError('Professor não existe');
+    }
+
+    const usuario = await this.prisma.usuario.findUnique({
       where: {
         id: usuarioId,
       },
     });
 
-    if (!professor) {
+    if (!usuario) {
       throw new AppError('Usuário não existe');
     }
 
