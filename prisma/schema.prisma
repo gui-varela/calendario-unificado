@@ -11,14 +11,15 @@ datasource db {
 }
 
 model Usuario {
-  id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email       String       @unique
-  username    String       @unique
-  password    String
-  perfil      Perfil       @relation(fields: [perfilId], references: [id])
-  perfilId    String       @db.Uuid
-  disciplinas Disciplina[]
-  sessions    Session[]
+  id        String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email     String     @unique
+  username  String     @unique
+  password  String
+  perfil    Perfil     @relation(fields: [perfilId], references: [id])
+  perfilId  String     @db.Uuid
+  sessions  Session[]
+  professor Professor?
+  aluno     Aluno?
 }
 
 model Session {
@@ -39,10 +40,25 @@ model Disciplina {
   id               String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   codigo           String         @unique
   nome             String
-  usuarioCriador   Usuario        @relation(fields: [usuarioCriadorId], references: [id])
+  usuarioCriador   Professor      @relation(fields: [usuarioCriadorId], references: [id])
   usuarioCriadorId String         @db.Uuid
   Prova            Prova[]
   CursoAfetado     CursoAfetado[]
+  Aluno            Aluno[]
+}
+
+model Aluno {
+  id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  usuario     Usuario      @relation(fields: [usuarioId], references: [id])
+  usuarioId   String       @unique @db.Uuid
+  disciplinas Disciplina[]
+}
+
+model Professor {
+  id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  usuario     Usuario      @relation(fields: [usuarioId], references: [id])
+  usuarioId   String       @unique @db.Uuid
+  disciplinas Disciplina[]
 }
 
 model Prova {
