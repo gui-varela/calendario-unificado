@@ -1,73 +1,116 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Calendario Unificado
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+> Projeto desenvolvido para a disciplina de Programação Avançada ministrada na Universidade Federal do Rio de Janeiro.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+### Ajustes e melhorias
 
-## Description
+O projeto ainda está em desenvolvimento e as próximas atualizações serão voltadas nas seguintes tarefas:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- [ ] Tarefa 1 ...
 
-## Installation
+## 💻 Pré-requisitos
 
-```bash
-$ npm install
+Antes de começar, verifique se você atendeu aos seguintes requisitos:
+* Você instalou a versão mais recente de Docker e Node.js
+* Você tem uma máquina Linux-Ubuntu.
+* Você leu `<guia / link / documentação_relacionada_ao_projeto>`.
+
+## 🚀 Instalando Calendario Unificado
+
+Para instalar o Calendario Unificado, estando no diretório do projeto, siga estas etapas:
+
+Linux:
+
+#### Criando os containers:
+
+```
+  sudo docker build .
+```
+```
+  sudo docker-compose up -d
+```
+#### Criando o banco de dados:
+
+```
+  npx prisma migrate dev --name mensagem-de-versionamento-do-banco
+```
+#### Atualizando o banco de dados:
+
+```
+  npx prisma generate
+```
+#### Removendo dados do banco de dados:
+
+```
+  npx prisma migrate reset
+```
+#### Visualizando o banco de dados:
+
+```
+  npx prisma studio
+```
+#### Inserindo dado no banco de dados:
+
+```
+  npx ts-node prisma/queries.ts
 ```
 
-## Running the app
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+#### Rodando a aplicação:
+```
+  npm start
 ```
 
-## Test
+## ☕ Usando Calendario Unificado
 
-```bash
-# unit tests
-$ npm run test
+...
 
-# e2e tests
-$ npm run test:e2e
+## 🤝 Colaboradores
 
-# test coverage
-$ npm run test:cov
-```
+Agradecemos às seguintes pessoas que contribuíram para este projeto:
 
-## Support
+<table>
+  <tr>
+    <td align="center">
+      <a href="#">
+        <img src="https://avatars.githubusercontent.com/u/33063784?v=4" width="100px;" alt="Foto do Anderson"/><br>
+        <sub>
+          <b>Anderson Sandes</b>
+        </sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="#">
+        <img src="https://avatars.githubusercontent.com/u/52808390?v=4" width="100px;" alt="Foto do Gui"/><br>
+        <sub>
+          <b>Guilherme Varela</b>
+        </sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="#">
+        <img src="https://avatars.githubusercontent.com/u/64283812?v=4" width="100px;" alt="Foto da Karen"/><br>
+        <sub>
+          <b>Karen Pacheco</b>
+        </sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="#">
+        <img src="https://avatars.githubusercontent.com/u/73672642?v=4" width="100px;" alt="Foto do Leo"/><br>
+        <sub>
+          <b>Leonardo</b>
+        </sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="#">
+        <img src="https://gitlab.com/uploads/-/system/user/avatar/8412485/avatar.png?width=400" width="100px;" alt="Foto da Lari"/><br>
+        <sub>
+          <b>Larissa Bral</b>
+        </sub>
+      </a>
+    </td>
+  </tr>
+</table>
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+[⬆ Voltar ao topo](#calendario-unificado)<br>
