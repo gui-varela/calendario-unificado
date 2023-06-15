@@ -16,7 +16,7 @@ export class UserService {
     });
 
     if (userAlreadyExists) {
-      throw new AppError('Username already used');
+      throw new AppError('Nome de usuário já em uso');
     }
 
     const emailAlreadyExists = await this.prisma.usuario.findUnique({
@@ -26,7 +26,7 @@ export class UserService {
     });
 
     if (emailAlreadyExists) {
-      throw new AppError('Email already used');
+      throw new AppError('Email já em uso');
     }
 
     const passwordHash = await hash(password, 8);
@@ -50,7 +50,7 @@ export class UserService {
       },
     });
 
-    if (perfil.codigo == 'P') {
+    if (perfil.codigo === 'P') {
       await this.prisma.professor.create({
         data: {
           usuarioId: user.id,

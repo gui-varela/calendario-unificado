@@ -15,7 +15,7 @@ export class DisciplinaService {
       },
     });
 
-    return perfil.codigo == 'P';
+    return perfil.codigo === 'P';
   }
 
   async create({ nome, codigo, usuarioCriadorId }: DisciplinaDTO) {
@@ -163,7 +163,7 @@ export class DisciplinaService {
       throw new AppError('Usuário não existe');
     }
 
-    if ((await this.isProfessor(usuario.perfilId)) == true) {
+    if ((await this.isProfessor(usuario.perfilId)) === true) {
       throw new AppError('Usuário não é aluno');
     }
 
@@ -212,7 +212,7 @@ export class DisciplinaService {
       throw new AppError('Usuário não existe');
     }
 
-    if ((await this.isProfessor(usuario.perfilId)) == true) {
+    if ((await this.isProfessor(usuario.perfilId)) === true) {
       throw new AppError('Usuário não é aluno');
     }
 
