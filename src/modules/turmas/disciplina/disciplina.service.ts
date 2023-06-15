@@ -246,4 +246,30 @@ export class DisciplinaService {
 
     return disciplina;
   }
+
+  async findDisciplinasPorNomeOuCodigo(nome?: string, codigo?: string) {
+    const disciplinas = await this.prisma.disciplina.findMany({
+      where: {
+        OR: [
+          {
+            codigo: {
+              contains: codigo,
+            },
+            nome: {
+              contains: nome,
+            },
+          },
+        ],
+      },
+      orderBy: {
+        nome: 'asc'
+      },
+    });
+
+    if (disciplinas.length === 0) {
+      throw new AppError('Nenhuma disciplina encontrada');
+    }
+
+    return disciplinas;
+  }
 }

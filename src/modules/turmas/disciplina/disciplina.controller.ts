@@ -43,4 +43,9 @@ export class DisciplinaController {
   async removeDisciplinaDoAluno(@Body() data: DisciplinaAlunoDTO) {
     return this.disciplinaService.removeDisciplinaDoAluno(data);
   }
+
+  @Get('/busca')
+  async findDisciplinasPorNomeOuCodigo(@Query('nome') nome?: string, @Query('codigo') codigo?: string) {
+    return this.disciplinaService.findDisciplinasPorNomeOuCodigo(nome, codigo);
+  }
 }
