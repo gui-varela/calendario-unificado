@@ -17,8 +17,8 @@ export class DisciplinaController {
     return this.disciplinaService.update(data);
   }
 
-  @Delete(':codigo')
-  async remove(@Param('codigo') codigo: string) {
-    return this.disciplinaService.remove(codigo);
+  @Delete()
+  async remove(@Body() data: DisciplinaDTO) {
+    return this.disciplinaService.remove(data);
   }
 }
