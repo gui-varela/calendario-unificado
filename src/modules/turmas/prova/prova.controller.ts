@@ -8,7 +8,7 @@ export class ProvaController {
   constructor(private readonly provaService: ProvaService) {}
 
   @Post()
-  async update(@Body() data: ProvaDTO) {
+  async create(@Body() data: ProvaDTO) {
     return this.provaService.create(data);
   }
 }
