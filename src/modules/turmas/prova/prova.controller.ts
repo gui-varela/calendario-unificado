@@ -1,5 +1,9 @@
 import { Body, Controller } from '@nestjs/common';
-import { Delete, Post, Put } from '@nestjs/common/decorators/http/request-mapping.decorator';
+import {
+  Delete,
+  Post,
+  Put,
+} from '@nestjs/common/decorators/http/request-mapping.decorator';
 import { ProvaDTO } from './prova.dto';
 import { ProvaService } from './prova.service';
 
@@ -21,5 +25,4 @@ export class ProvaController {
   async remove(@Body() data: ProvaDTO) {
     return this.provaService.remove(data);
   }
-
 }

@@ -1,5 +1,9 @@
-import { Body, Controller, Param} from '@nestjs/common';
-import { Delete, Post, Put } from '@nestjs/common/decorators/http/request-mapping.decorator';
+import { Body, Controller, Param } from '@nestjs/common';
+import {
+  Delete,
+  Post,
+  Put,
+} from '@nestjs/common/decorators/http/request-mapping.decorator';
 import { DisciplinaDTO } from './disciplina.dto';
 import { DisciplinaService } from './disciplina.service';
 

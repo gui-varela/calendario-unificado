@@ -21,11 +21,11 @@ async function main() {
     data: [
       {
         codigo: 'P',
-        nome: 'Professor'
+        nome: 'Professor',
       },
       {
         codigo: 'A',
-        nome: 'Aluno'
+        nome: 'Aluno',
       },
     ],
   });
