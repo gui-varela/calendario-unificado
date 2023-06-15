@@ -3,6 +3,7 @@ import { hash } from 'bcrypt';
 import { AppError } from 'src/errors/AppError';
 import { PrismaService } from '../../../database/PrismaService';
 import { DisciplinaDTO } from './disciplina.dto';
+import { DisciplinaAlunoDTO } from './disciplina-aluno.dto';
 
 @Injectable()
 export class DisciplinaService {
@@ -36,7 +37,7 @@ export class DisciplinaService {
     });
 
     if (!professor) {
-      throw new AppError('Não existe professor');
+      throw new AppError('Professor não existe');
     }
 
     const disciplina = await this.prisma.disciplina.create({
@@ -122,7 +123,7 @@ export class DisciplinaService {
       throw new AppError('Usuário não existe');
     }
 
-    if (this.isProfessor(usuario.perfilId)) {
+    if (await this.isProfessor(usuario.perfilId) == true) {
       const professor = await this.prisma.professor.findUnique({
         where: {
           usuarioId: usuario.id
@@ -142,7 +143,7 @@ export class DisciplinaService {
       disciplinas = await this.prisma.disciplina.findMany({
         where: {
           Aluno: {
-            every: {
+            some: {
               usuarioId: usuario.id
             }
           }
@@ -150,5 +151,97 @@ export class DisciplinaService {
       });
     }
     return disciplinas;
+  }
+
+  async addDisciplinaAoAluno({ username, disciplinaId }: DisciplinaAlunoDTO) {
+    const usuario = await this.prisma.usuario.findUniqueOrThrow({
+      where: {
+        username,
+      },
+    });
+
+    if (!usuario) {
+      throw new AppError('Usuário não existe');
+    }
+
+    if (await this.isProfessor(usuario.perfilId) == true) {
+      throw new AppError('Usuário não é aluno');
+    }
+
+    const existeDisciplina = await this.prisma.disciplina.findFirst({
+      where: {
+        id: disciplinaId,
+        Aluno: {
+          some: {
+            usuarioId: usuario.id
+          }
+        }
+      },
+    });
+
+    if (existeDisciplina) {
+      throw new AppError('Disciplina já adicionada');
+    }
+
+    const disciplina = await this.prisma.disciplina.update({
+      where: {
+        id: disciplinaId
+      },
+      data: {
+        Aluno: {
+          connect: {
+            usuarioId: usuario.id
+          }
+        }
+      }
+    });
+
+    return disciplina;
+  }
+
+  async removeDisciplinaDoAluno({ username, disciplinaId }: DisciplinaAlunoDTO) {
+    const usuario = await this.prisma.usuario.findUniqueOrThrow({
+      where: {
+        username,
+      },
+    });
+
+    if (!usuario) {
+      throw new AppError('Usuário não existe');
+    }
+
+    if (await this.isProfessor(usuario.perfilId) == true) {
+      throw new AppError('Usuário não é aluno');
+    }
+
+    const existeDisciplina = await this.prisma.disciplina.findFirst({
+      where: {
+        id: disciplinaId,
+        Aluno: {
+          some: {
+            usuarioId: usuario.id
+          }
+        }
+      },
+    });
+
+    if (!existeDisciplina) {
+      throw new AppError('Aluno não cursa essa disciplina');
+    }
+
+    const disciplina = await this.prisma.disciplina.update({
+      where: {
+        id: disciplinaId
+      },
+      data: {
+        Aluno: {
+          disconnect: {
+            usuarioId: usuario.id
+          }
+        }
+      }
+    });
+
+    return disciplina;
   }
 }

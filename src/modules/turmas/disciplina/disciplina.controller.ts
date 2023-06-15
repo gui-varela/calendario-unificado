@@ -2,6 +2,7 @@ import { Body, Controller, Query} from '@nestjs/common';
 import { Delete, Get, Post, Put } from '@nestjs/common/decorators/http/request-mapping.decorator';
 import { DisciplinaDTO } from './disciplina.dto';
 import { DisciplinaService } from './disciplina.service';
+import { DisciplinaAlunoDTO } from './disciplina-aluno.dto';
 
 @Controller('disciplina')
 export class DisciplinaController {
@@ -25,5 +26,15 @@ export class DisciplinaController {
   @Get()
   async findDisciplinasPorUsuario(@Query('username') username: string) {
     return this.disciplinaService.findDisciplinasPorUsuario(username);
+  }
+
+  @Post('/aluno')
+  async addDisciplinaAoAluno(@Body() data: DisciplinaAlunoDTO) {
+    return this.disciplinaService.addDisciplinaAoAluno(data);
+  }
+
+  @Delete('/aluno')
+  async removeDisciplinaDoAluno(@Body() data: DisciplinaAlunoDTO) {
+    return this.disciplinaService.removeDisciplinaDoAluno(data);
   }
 }
