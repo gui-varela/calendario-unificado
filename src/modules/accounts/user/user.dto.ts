@@ -3,5 +3,5 @@ export type UserDTO = {
   email: string;
   username: string;
   password: string;
-  perfilId: string;
+  codigoPerfil: string;
 };

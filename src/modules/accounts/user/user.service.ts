@@ -6,9 +6,9 @@ import { UserDTO } from './user.dto';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
-  async create({ email, username, password, perfilId }: UserDTO) {
+  async create({ email, username, password, codigoPerfil }: UserDTO) {
     const userAlreadyExists = await this.prisma.usuario.findUnique({
       where: {
         username,
@@ -19,14 +19,24 @@ export class UserService {
       throw new AppError('Username already used');
     }
 
-    const passwordHash = await hash(password, 8);    
+    const passwordHash = await hash(password, 8);
+
+    const perfil = await this.prisma.perfil.findUnique({
+      where: {
+        codigo: codigoPerfil,
+      }
+    });
+
+    if (!perfil) {
+      throw new AppError('Perfil não encontrado');
+    }
 
     const user = await this.prisma.usuario.create({
       data: {
         email,
         username,
         password: passwordHash,
-        perfilId,
+        perfilId: perfil.id,
       },
     });
 

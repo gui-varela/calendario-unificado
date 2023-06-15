@@ -30,7 +30,7 @@ model Session {
 
 model Perfil {
   id      String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  codigo  String
+  codigo  String    @unique
   nome    String
   usuario Usuario[]
 }
