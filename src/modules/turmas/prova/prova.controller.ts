@@ -1,5 +1,5 @@
 import { Body, Controller } from '@nestjs/common';
-import { Post } from '@nestjs/common/decorators/http/request-mapping.decorator';
+import { Post, Put } from '@nestjs/common/decorators/http/request-mapping.decorator';
 import { ProvaDTO } from './prova.dto';
 import { ProvaService } from './prova.service';
 
@@ -11,4 +11,10 @@ export class ProvaController {
   async create(@Body() data: ProvaDTO) {
     return this.provaService.create(data);
   }
+
+  @Put()
+  async update(@Body() data: ProvaDTO) {
+    return this.provaService.update(data);
+  }
+
 }

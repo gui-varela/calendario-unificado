@@ -40,4 +40,40 @@ export class ProvaService {
 
     return prova;
   }
+
+  async update({ nome, data, disciplinaId }: ProvaDTO) {
+    const disciplinaExists = await this.prisma.disciplina.findUnique({
+      where: {
+        id: disciplinaId
+      }
+    });
+
+    if (!disciplinaExists) {
+      throw new AppError('Disciplina não existe');
+    }
+
+    const provaMarcada = await this.prisma.prova.findFirst({
+      where: {
+        disciplinaId: disciplinaId,
+        nome: nome
+      }
+    });
+
+    if (!provaMarcada) {
+      throw new AppError('Essa prova não existe');
+    }
+
+    const prova = await this.prisma.prova.update({
+      where: {
+        id: provaMarcada.id
+      },
+      data: {
+        nome,
+        data,
+        disciplinaId
+      }
+    });
+
+    return prova;
+  }
 }
