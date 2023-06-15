@@ -1,6 +1,7 @@
-import { Body, Controller } from '@nestjs/common';
+import { Body, Controller, Query } from '@nestjs/common';
 import {
   Delete,
+  Get,
   Post,
   Put,
 } from '@nestjs/common/decorators/http/request-mapping.decorator';
@@ -24,5 +25,10 @@ export class CursoController {
   @Delete()
   async remove(@Body() data: CursoDTO) {
     return this.cursoService.remove(data);
+  }
+
+  @Get()
+  async findCursoPorNome(@Query('nome') nome?: string,) {
+    return this.cursoService.findCursoPorNome(nome);
   }
 }

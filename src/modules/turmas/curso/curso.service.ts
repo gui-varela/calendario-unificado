@@ -73,4 +73,27 @@ export class CursoService {
 
     return curso;
   }
+
+  async findCursoPorNome(nome?: string) {
+    const cursos = await this.prisma.disciplina.findMany({
+      where: {
+        OR: [
+          {
+            nome: {
+              contains: nome,
+            },
+          },
+        ],
+      },
+      orderBy: {
+        nome: 'asc'
+      },
+    });
+
+    if (cursos.length === 0) {
+      throw new AppError('Nenhuma disciplina encontrada');
+    }
+
+    return cursos;
+  }
 }
