@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { hash } from 'bcrypt';
 import { AppError } from 'src/errors/AppError';
 import { PrismaService } from '../../../database/PrismaService';
 import { DisciplinaDTO } from './disciplina.dto';
@@ -7,7 +6,7 @@ import { DisciplinaAlunoDTO } from './disciplina-aluno.dto';
 
 @Injectable()
 export class DisciplinaService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   public async isProfessor(id: string) {
     const perfil = await this.prisma.perfil.findUnique({
@@ -22,8 +21,8 @@ export class DisciplinaService {
   async create({ nome, codigo, usuarioCriadorId }: DisciplinaDTO) {
     const disciplinaAlreadyExists = await this.prisma.disciplina.findUnique({
       where: {
-        codigo
-      }
+        codigo,
+      },
     });
 
     if (disciplinaAlreadyExists) {
@@ -54,8 +53,8 @@ export class DisciplinaService {
   async update({ nome, codigo }: DisciplinaDTO) {
     const disciplinaExists = await this.prisma.disciplina.findUnique({
       where: {
-        codigo
-      }
+        codigo,
+      },
     });
 
     if (!disciplinaExists) {
@@ -64,7 +63,7 @@ export class DisciplinaService {
 
     const disciplina = await this.prisma.disciplina.update({
       where: {
-        codigo: codigo
+        codigo: codigo,
       },
       data: {
         nome,
@@ -78,8 +77,8 @@ export class DisciplinaService {
   async remove({ codigo }: DisciplinaDTO) {
     const disciplinaExists = await this.prisma.disciplina.findUnique({
       where: {
-        codigo: codigo
-      }
+        codigo: codigo,
+      },
     });
 
     if (!disciplinaExists) {
@@ -88,24 +87,24 @@ export class DisciplinaService {
 
     const provasExists = await this.prisma.prova.findMany({
       where: {
-        disciplinaId: disciplinaExists.id
-      }
+        disciplinaId: disciplinaExists.id,
+      },
     });
 
     if (provasExists) {
       provasExists.forEach(async (prova) => {
         await this.prisma.prova.delete({
           where: {
-            id: prova.id
-          }
+            id: prova.id,
+          },
         });
       });
     }
 
     const disciplina = await this.prisma.disciplina.delete({
       where: {
-        codigo: codigo
-      }
+        codigo: codigo,
+      },
     });
 
     return disciplina;

@@ -11,8 +11,8 @@ export class ProvaService {
   async create({ nome, data, disciplinaId }: ProvaDTO) {
     const disciplinaExists = await this.prisma.disciplina.findUnique({
       where: {
-        id: disciplinaId
-      }
+        id: disciplinaId,
+      },
     });
 
     if (!disciplinaExists) {
@@ -22,8 +22,8 @@ export class ProvaService {
     const existeProva = await this.prisma.prova.findFirst({
       where: {
         disciplinaId: disciplinaId,
-        nome: nome
-      }
+        nome: nome,
+      },
     });
 
     if (existeProva) {
@@ -34,8 +34,8 @@ export class ProvaService {
       data: {
         nome,
         data,
-        disciplinaId
-      }
+        disciplinaId,
+      },
     });
 
     return prova;
@@ -44,8 +44,8 @@ export class ProvaService {
   async update({ nome, data, disciplinaId }: ProvaDTO) {
     const disciplinaExists = await this.prisma.disciplina.findUnique({
       where: {
-        id: disciplinaId
-      }
+        id: disciplinaId,
+      },
     });
 
     if (!disciplinaExists) {
@@ -55,8 +55,8 @@ export class ProvaService {
     const provaMarcada = await this.prisma.prova.findFirst({
       where: {
         disciplinaId: disciplinaId,
-        nome: nome
-      }
+        nome: nome,
+      },
     });
 
     if (!provaMarcada) {
@@ -65,23 +65,23 @@ export class ProvaService {
 
     const prova = await this.prisma.prova.update({
       where: {
-        id: provaMarcada.id
+        id: provaMarcada.id,
       },
       data: {
         nome,
         data,
-        disciplinaId
-      }
+        disciplinaId,
+      },
     });
 
     return prova;
   }
 
-  async remove({ nome, data, disciplinaId }: ProvaDTO) {
+  async remove({ nome, disciplinaId }: ProvaDTO) {
     const disciplinaExists = await this.prisma.disciplina.findUnique({
       where: {
-        id: disciplinaId
-      }
+        id: disciplinaId,
+      },
     });
 
     if (!disciplinaExists) {
@@ -91,8 +91,8 @@ export class ProvaService {
     const provaMarcada = await this.prisma.prova.findFirst({
       where: {
         disciplinaId: disciplinaId,
-        nome: nome
-      }
+        nome: nome,
+      },
     });
 
     if (!provaMarcada) {
@@ -101,8 +101,8 @@ export class ProvaService {
 
     const prova = await this.prisma.prova.delete({
       where: {
-        id: provaMarcada.id
-      }
+        id: provaMarcada.id,
+      },
     });
 
     return prova;
