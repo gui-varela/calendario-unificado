@@ -1,5 +1,5 @@
-import { Body, Controller, Param} from '@nestjs/common';
-import { Delete, Post, Put } from '@nestjs/common/decorators/http/request-mapping.decorator';
+import { Body, Controller, Query} from '@nestjs/common';
+import { Delete, Get, Post, Put } from '@nestjs/common/decorators/http/request-mapping.decorator';
 import { DisciplinaDTO } from './disciplina.dto';
 import { DisciplinaService } from './disciplina.service';
 
@@ -20,5 +20,10 @@ export class DisciplinaController {
   @Delete()
   async remove(@Body() data: DisciplinaDTO) {
     return this.disciplinaService.remove(data);
+  }
+
+  @Get()
+  async findDisciplinasPorUsuario(@Query('username') username: string) {
+    return this.disciplinaService.findDisciplinasPorUsuario(username);
   }
 }

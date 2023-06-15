@@ -8,6 +8,16 @@ import { DisciplinaDTO } from './disciplina.dto';
 export class DisciplinaService {
   constructor(private prisma: PrismaService) { }
 
+  public async isProfessor(id: string) {
+    const perfil = await this.prisma.perfil.findUnique({
+      where: {
+        id
+      }
+    });
+
+    return perfil.codigo == 'P'
+  }
+
   async create({ nome, codigo, usuarioCriadorId }: DisciplinaDTO) {
     const disciplinaAlreadyExists = await this.prisma.disciplina.findUnique({
       where: {
@@ -19,13 +29,13 @@ export class DisciplinaService {
       throw new AppError('Disciplina já existe');
     }
 
-    const existeProfessor = await this.prisma.usuario.findUnique({
+    const professor = await this.prisma.professor.findUnique({
       where: {
-        id: usuarioCriadorId
+        usuarioId: usuarioCriadorId
       }
     });
 
-    if (!existeProfessor) {
+    if (!professor) {
       throw new AppError('Não existe professor');
     }
 
@@ -33,14 +43,14 @@ export class DisciplinaService {
       data: {
         nome,
         codigo,
-        usuarioCriadorId
+        usuarioCriadorId: professor.id
       }
     });
 
     return disciplina;
   }
 
-  async update({ nome, codigo, usuarioCriadorId }: DisciplinaDTO) {
+  async update({ nome, codigo }: DisciplinaDTO) {
     const disciplinaExists = await this.prisma.disciplina.findUnique({
       where: {
         codigo
@@ -57,8 +67,7 @@ export class DisciplinaService {
       },
       data: {
         nome,
-        codigo,
-        usuarioCriadorId
+        codigo
       }
     });
 
@@ -99,5 +108,47 @@ export class DisciplinaService {
     });
 
     return disciplina;
+  }
+
+  async findDisciplinasPorUsuario(username: string) {
+    let disciplinas;
+    const usuario = await this.prisma.usuario.findUniqueOrThrow({
+      where: {
+        username,
+      },
+    });
+
+    if (!usuario) {
+      throw new AppError('Usuário não existe');
+    }
+
+    if (this.isProfessor(usuario.perfilId)) {
+      const professor = await this.prisma.professor.findUnique({
+        where: {
+          usuarioId: usuario.id
+        }
+      });
+      disciplinas = await this.prisma.disciplina.findMany({
+        where: {
+          usuarioCriadorId: professor.id
+        },
+      });
+    } else {
+      const aluno = await this.prisma.aluno.findUnique({
+        where: {
+          usuarioId: usuario.id
+        }
+      });
+      disciplinas = await this.prisma.disciplina.findMany({
+        where: {
+          Aluno: {
+            every: {
+              usuarioId: usuario.id
+            }
+          }
+        },
+      });
+    }
+    return disciplinas;
   }
 }
