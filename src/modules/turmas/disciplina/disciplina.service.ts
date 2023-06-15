@@ -65,7 +65,23 @@ export class DisciplinaService {
     return disciplina;
   }
 
-  async remove({ nome, codigo, usuarioCriadorId }: DisciplinaDTO) {
+  async remove(codigo: string) {
+    const disciplinaExists = await this.prisma.disciplina.findUnique({
+      where: {
+        codigo: codigo
+      }
+    });
 
+    if (!disciplinaExists) {
+      throw new AppError('Disciplina não existe');
+    }
+
+    const disciplina = await this.prisma.disciplina.delete({
+      where: {
+        codigo: codigo
+      }
+    });
+
+    return disciplina;
   }
 }
