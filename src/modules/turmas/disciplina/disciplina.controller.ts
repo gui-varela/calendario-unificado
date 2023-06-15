@@ -1,8 +1,9 @@
-import { Body, Controller, Param } from '@nestjs/common';
+import { Body, Controller, Param, Query } from '@nestjs/common';
 import {
   Delete,
   Post,
   Put,
+  Get,
 } from '@nestjs/common/decorators/http/request-mapping.decorator';
 
 import { DisciplinaDTO } from './disciplina.dto';

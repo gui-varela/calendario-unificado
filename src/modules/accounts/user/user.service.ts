@@ -53,13 +53,13 @@ export class UserService {
     if (perfil.codigo == 'P') {
       await this.prisma.professor.create({
         data: {
-          usuarioId: user.id
+          usuarioId: user.id,
         },
       });
     } else {
       await this.prisma.aluno.create({
         data: {
-          usuarioId: user.id
+          usuarioId: user.id,
         },
       });
     }
