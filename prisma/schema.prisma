@@ -40,7 +40,7 @@ model Disciplina {
   codigo           String         @unique
   nome             String
   usuarioCriador   Usuario        @relation(fields: [usuarioCriadorId], references: [id])
-  usuarioCriadorId String         @unique @db.Uuid
+  usuarioCriadorId String         @db.Uuid
   Prova            Prova[]
   CursoAfetado     CursoAfetado[]
 }
@@ -50,7 +50,7 @@ model Prova {
   nome         String
   data         DateTime
   disciplina   Disciplina @relation(fields: [disciplinaId], references: [id])
-  disciplinaId String     @unique @db.Uuid
+  disciplinaId String     @db.Uuid
 }
 
 model Curso {
