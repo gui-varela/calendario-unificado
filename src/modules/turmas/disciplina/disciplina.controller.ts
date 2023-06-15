@@ -1,6 +1,7 @@
-import { Body, Controller, Param } from '@nestjs/common';
+import { Body, Controller, Query } from '@nestjs/common';
 import {
   Delete,
+  Get,
   Post,
   Put,
 } from '@nestjs/common/decorators/http/request-mapping.decorator';
