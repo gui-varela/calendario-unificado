@@ -1,6 +1,7 @@
-import { Body, Controller, Param, Query } from '@nestjs/common';
+import { Body, Controller, Query } from '@nestjs/common';
 import {
   Delete,
+  Get,
   Post,
   Put,
   Get,
