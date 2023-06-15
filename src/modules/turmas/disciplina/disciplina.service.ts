@@ -11,11 +11,11 @@ export class DisciplinaService {
   public async isProfessor(id: string) {
     const perfil = await this.prisma.perfil.findUnique({
       where: {
-        id
-      }
+        id,
+      },
     });
 
-    return perfil.codigo == 'P'
+    return perfil.codigo == 'P';
   }
 
   async create({ nome, codigo, usuarioCriadorId }: DisciplinaDTO) {
@@ -31,8 +31,8 @@ export class DisciplinaService {
 
     const professor = await this.prisma.professor.findUnique({
       where: {
-        usuarioId: usuarioCriadorId
-      }
+        usuarioId: usuarioCriadorId,
+      },
     });
 
     if (!professor) {
@@ -43,8 +43,8 @@ export class DisciplinaService {
       data: {
         nome,
         codigo,
-        usuarioCriadorId: professor.id
-      }
+        usuarioCriadorId: professor.id,
+      },
     });
 
     return disciplina;
@@ -67,8 +67,8 @@ export class DisciplinaService {
       },
       data: {
         nome,
-        codigo
-      }
+        codigo,
+      },
     });
 
     return disciplina;
@@ -122,30 +122,30 @@ export class DisciplinaService {
       throw new AppError('Usuário não existe');
     }
 
-    if (await this.isProfessor(usuario.perfilId) == true) {
+    if ((await this.isProfessor(usuario.perfilId)) === true) {
       const professor = await this.prisma.professor.findUnique({
         where: {
-          usuarioId: usuario.id
-        }
+          usuarioId: usuario.id,
+        },
       });
       disciplinas = await this.prisma.disciplina.findMany({
         where: {
-          usuarioCriadorId: professor.id
+          usuarioCriadorId: professor.id,
         },
       });
     } else {
       const aluno = await this.prisma.aluno.findUnique({
         where: {
-          usuarioId: usuario.id
-        }
+          usuarioId: usuario.id,
+        },
       });
       disciplinas = await this.prisma.disciplina.findMany({
         where: {
           Aluno: {
             some: {
-              usuarioId: usuario.id
-            }
-          }
+              usuarioId: usuario.id,
+            },
+          },
         },
       });
     }
@@ -163,7 +163,7 @@ export class DisciplinaService {
       throw new AppError('Usuário não existe');
     }
 
-    if (await this.isProfessor(usuario.perfilId) == true) {
+    if ((await this.isProfessor(usuario.perfilId)) == true) {
       throw new AppError('Usuário não é aluno');
     }
 
@@ -172,9 +172,9 @@ export class DisciplinaService {
         id: disciplinaId,
         Aluno: {
           some: {
-            usuarioId: usuario.id
-          }
-        }
+            usuarioId: usuario.id,
+          },
+        },
       },
     });
 
@@ -184,21 +184,24 @@ export class DisciplinaService {
 
     const disciplina = await this.prisma.disciplina.update({
       where: {
-        id: disciplinaId
+        id: disciplinaId,
       },
       data: {
         Aluno: {
           connect: {
-            usuarioId: usuario.id
-          }
-        }
-      }
+            usuarioId: usuario.id,
+          },
+        },
+      },
     });
 
     return disciplina;
   }
 
-  async removeDisciplinaDoAluno({ username, disciplinaId }: DisciplinaAlunoDTO) {
+  async removeDisciplinaDoAluno({
+    username,
+    disciplinaId,
+  }: DisciplinaAlunoDTO) {
     const usuario = await this.prisma.usuario.findUniqueOrThrow({
       where: {
         username,
@@ -209,7 +212,7 @@ export class DisciplinaService {
       throw new AppError('Usuário não existe');
     }
 
-    if (await this.isProfessor(usuario.perfilId) == true) {
+    if ((await this.isProfessor(usuario.perfilId)) == true) {
       throw new AppError('Usuário não é aluno');
     }
 
@@ -218,9 +221,9 @@ export class DisciplinaService {
         id: disciplinaId,
         Aluno: {
           some: {
-            usuarioId: usuario.id
-          }
-        }
+            usuarioId: usuario.id,
+          },
+        },
       },
     });
 
@@ -230,15 +233,15 @@ export class DisciplinaService {
 
     const disciplina = await this.prisma.disciplina.update({
       where: {
-        id: disciplinaId
+        id: disciplinaId,
       },
       data: {
         Aluno: {
           disconnect: {
-            usuarioId: usuario.id
-          }
-        }
-      }
+            usuarioId: usuario.id,
+          },
+        },
+      },
     });
 
     return disciplina;
