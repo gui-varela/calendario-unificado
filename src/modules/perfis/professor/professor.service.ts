@@ -4,7 +4,13 @@ import { PrismaService } from '../../../database/PrismaService';
 
 @Injectable()
 export class ProfessorService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
+
+  static CODIGO_PERFIL_PROFESSOR = 'P';
+
+  static isUsuarioProfessor(codigoPerfil: string) {
+    return codigoPerfil === this.CODIGO_PERFIL_PROFESSOR;
+  }
 
   async findProfessorPorUsuarioId(usuarioId: string) {
     const professor = await this.prisma.professor.findUnique({
@@ -37,11 +43,7 @@ export class ProfessorService {
       throw new AppError('Perfil não existe');
     }
 
-    const CODIGO_PERFIL_PROFESSOR = 'P';
-
-    const isUsuarioProfessor = perfil.codigo === CODIGO_PERFIL_PROFESSOR;
-
-    if (!isUsuarioProfessor) {
+    if (!ProfessorService.isUsuarioProfessor(perfil.codigo)) {
       throw new AppError('Este usuário não tem perfil de professor');
     }
 

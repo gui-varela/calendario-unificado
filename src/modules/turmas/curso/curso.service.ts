@@ -2,10 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { AppError } from 'src/errors/AppError';
 import { PrismaService } from '../../../database/PrismaService';
 import { CursoDTO } from './curso.dto';
+import { CursoDisciplinaDTO } from './curso-disciplina.dto';
 
 @Injectable()
 export class CursoService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async create({ nome }: CursoDTO) {
     const cursoExists = await this.prisma.curso.findUnique({
@@ -74,24 +75,94 @@ export class CursoService {
     return curso;
   }
 
-  async findCursoPorNome(nome?: string) {
-    const cursos = await this.prisma.disciplina.findMany({
+  async removeCursoDisciplina({ codigo, nomeCurso }: CursoDisciplinaDTO) {
+    const disciplinaExists = await this.prisma.disciplina.findUnique({
       where: {
-        OR: [
-          {
-            nome: {
-              contains: nome,
-            },
+        codigo,
+      },
+    });
+
+    if (!disciplinaExists) {
+      throw new AppError('Disciplina não existe');
+    }
+
+    const cursoExists = await this.prisma.curso.findUnique({
+      where: {
+        nome: nomeCurso,
+      },
+    });
+
+    if (!cursoExists) {
+      throw new AppError('Curso não existe');
+    }
+
+    const disciplina = await this.prisma.disciplina.update({
+      where: {
+        codigo: codigo,
+      },
+      data: {
+        Curso: {
+          disconnect: {
+            nome: nomeCurso,
           },
-        ],
+        },
+      },
+    });
+
+    return disciplina;
+  }
+
+  async addCursoDisciplina({ codigo, nomeCurso }: CursoDisciplinaDTO) {
+    const disciplinaExists = await this.prisma.disciplina.findUnique({
+      where: {
+        codigo,
+      },
+    });
+
+    if (!disciplinaExists) {
+      throw new AppError('Disciplina não existe');
+    }
+
+    const cursoExists = await this.prisma.curso.findUnique({
+      where: {
+        nome: nomeCurso,
+      },
+    });
+
+    if (!cursoExists) {
+      throw new AppError('Curso não existe');
+    }
+
+    const disciplina = await this.prisma.disciplina.update({
+      where: {
+        codigo: codigo,
+      },
+      data: {
+        Curso: {
+          connect: {
+            nome: nomeCurso,
+          },
+        },
+      },
+    });
+
+    return disciplina;
+  }
+
+  async findCursoPorNome(nome?: string) {
+    const cursos = await this.prisma.curso.findMany({
+      where: {
+        nome: {
+          contains: nome,
+        },
       },
       orderBy: {
-        nome: 'asc'
+        nome: 'asc',
       },
     });
 
     if (cursos.length === 0) {
-      throw new AppError('Nenhuma disciplina encontrada');
+      throw new AppError('Nenhum curso encontrado');
     }
 
     return cursos;

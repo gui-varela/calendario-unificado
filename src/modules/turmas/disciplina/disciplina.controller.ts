@@ -8,11 +8,11 @@ import {
 
 import { DisciplinaDTO } from './disciplina.dto';
 import { DisciplinaService } from './disciplina.service';
-import { DisciplinaAlunoDTO } from './disciplina-aluno.dto';
+import { DisciplinaAlunoDTO } from '../../perfis/aluno/disciplina-aluno.dto';
 
 @Controller('disciplina')
 export class DisciplinaController {
-  constructor(private readonly disciplinaService: DisciplinaService) {}
+  constructor(private readonly disciplinaService: DisciplinaService) { }
 
   @Post()
   async create(@Body() data: DisciplinaDTO) {
@@ -34,28 +34,11 @@ export class DisciplinaController {
     return this.disciplinaService.findDisciplinasPorUsuario(username);
   }
 
-  @Post('/aluno')
-  async addDisciplinaAoAluno(@Body() data: DisciplinaAlunoDTO) {
-    return this.disciplinaService.addDisciplinaAoAluno(data);
-  }
-
-  @Delete('/aluno')
-  async removeDisciplinaDoAluno(@Body() data: DisciplinaAlunoDTO) {
-    return this.disciplinaService.removeDisciplinaDoAluno(data);
-  }
-
   @Get('/busca')
-  async findDisciplinasPorNomeOuCodigo(@Query('nome') nome?: string, @Query('codigo') codigo?: string) {
+  async findDisciplinasPorNomeOuCodigo(
+    @Query('nome') nome?: string,
+    @Query('codigo') codigo?: string,
+  ) {
     return this.disciplinaService.findDisciplinasPorNomeOuCodigo(nome, codigo);
-  }
-
-  @Post('/curso')
-  async addCursoDisciplina(@Body() data: DisciplinaDTO) {
-    return this.disciplinaService.removeCursoDisciplina(data);
-  }
-
-  @Delete('/curso')
-  async removeCursoDisciplina(@Body() data: DisciplinaDTO) {
-    return this.disciplinaService.removeCursoDisciplina(data);
   }
 }
