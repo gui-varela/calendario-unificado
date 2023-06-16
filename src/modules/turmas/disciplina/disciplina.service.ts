@@ -20,7 +20,6 @@ export class DisciplinaService {
   }
 
   async create({ nome, codigo, nomeCurso, usuarioCriadorId }: DisciplinaDTO) {
-    let disciplina: Disciplina;
     const disciplinaAlreadyExists = await this.prisma.disciplina.findUnique({
       where: {
         codigo,
@@ -51,16 +50,16 @@ export class DisciplinaService {
       throw new AppError('Curso não existe');
     }
 
-    disciplina = await this.prisma.disciplina.create({
+    const disciplina = await this.prisma.disciplina.create({
       data: {
         nome,
         codigo,
         usuarioCriadorId: professor.id,
         Curso: {
           connect: {
-            nome: nomeCurso
-          }
-        }
+            nome: nomeCurso,
+          },
+        },
       },
     });
 
@@ -97,8 +96,8 @@ export class DisciplinaService {
         codigo,
         Curso: {
           connect: {
-            nome: nomeCurso
-          }
+            nome: nomeCurso,
+          },
         },
       },
     });
@@ -219,8 +218,8 @@ export class DisciplinaService {
       data: {
         Curso: {
           disconnect: {
-            nome: nomeCurso
-          }
+            nome: nomeCurso,
+          },
         },
       },
     });
@@ -256,8 +255,8 @@ export class DisciplinaService {
       data: {
         Curso: {
           connect: {
-            nome: nomeCurso
-          }
+            nome: nomeCurso,
+          },
         },
       },
     });
@@ -375,7 +374,7 @@ export class DisciplinaService {
         ],
       },
       orderBy: {
-        nome: 'asc'
+        nome: 'asc',
       },
     });
 

@@ -5,7 +5,7 @@ import { CursoDTO } from './curso.dto';
 
 @Injectable()
 export class CursoService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async create({ nome }: CursoDTO) {
     const cursoExists = await this.prisma.curso.findUnique({
@@ -75,23 +75,19 @@ export class CursoService {
   }
 
   async findCursoPorNome(nome?: string) {
-    const cursos = await this.prisma.disciplina.findMany({
+    const cursos = await this.prisma.curso.findMany({
       where: {
-        OR: [
-          {
-            nome: {
-              contains: nome,
-            },
-          },
-        ],
+        nome: {
+          contains: nome,
+        },
       },
       orderBy: {
-        nome: 'asc'
+        nome: 'asc',
       },
     });
 
     if (cursos.length === 0) {
-      throw new AppError('Nenhuma disciplina encontrada');
+      throw new AppError('Nenhum curso encontrado');
     }
 
     return cursos;

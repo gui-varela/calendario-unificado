@@ -10,7 +10,7 @@ import { CursoService } from './curso.service';
 
 @Controller('curso')
 export class CursoController {
-  constructor(private readonly cursoService: CursoService) { }
+  constructor(private readonly cursoService: CursoService) {}
 
   @Post()
   async create(@Body() data: CursoDTO) {
@@ -28,7 +28,7 @@ export class CursoController {
   }
 
   @Get()
-  async findCursoPorNome(@Query('nome') nome?: string,) {
+  async findCursoPorNome(@Query('nome') nome?: string) {
     return this.cursoService.findCursoPorNome(nome);
   }
 }
