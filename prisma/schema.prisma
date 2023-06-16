@@ -26,7 +26,7 @@ model Session {
   sessionId String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   token     String
   usuario   Usuario @relation(fields: [usuarioId], references: [id])
-  usuarioId String  @db.Uuid @unique
+  usuarioId String  @unique @db.Uuid
 }
 
 model Perfil {
@@ -37,13 +37,13 @@ model Perfil {
 }
 
 model Disciplina {
-  id               String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  codigo           String         @unique
+  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  codigo           String    @unique
   nome             String
-  usuarioCriador   Professor      @relation(fields: [usuarioCriadorId], references: [id])
-  usuarioCriadorId String         @db.Uuid
+  usuarioCriador   Professor @relation(fields: [usuarioCriadorId], references: [id])
+  usuarioCriadorId String    @db.Uuid
   Prova            Prova[]
-  CursoAfetado     CursoAfetado[]
+  Curso            Curso[]
   Aluno            Aluno[]
 }
 
@@ -70,15 +70,7 @@ model Prova {
 }
 
 model Curso {
-  id           String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  nome         String
-  cursoAfetado CursoAfetado[]
-}
-
-model CursoAfetado {
-  id           String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  curso        Curso      @relation(fields: [cursoId], references: [id])
-  cursoId      String     @unique @db.Uuid
-  disciplina   Disciplina @relation(fields: [disciplinaId], references: [id])
-  disciplinaId String     @unique @db.Uuid
+  id         String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nome       String       @unique
+  disciplina Disciplina[]
 }
