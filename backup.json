@@ -1,0 +1,25 @@
+[{
+  "nome": "Cálculo I",
+  "codigo": "MAC123",
+  "usuarioCriadorId": ""
+},
+{
+  "nome": "Cálculo I",
+  "codigo": "MAC234",
+  "usuarioCriadorId": ""
+},
+{
+  "nome": "Cálculo III",
+  "codigo": "MAC345",
+  "usuarioCriadorId": ""
+},
+{
+  "nome": "Circuitos Lógicos",
+  "codigo": "COS123",
+  "usuarioCriadorId": ""
+},
+{
+  "nome": "Arquitetura de Computadores",
+  "codigo": "COS985",
+  "usuarioCriadorId": ""
+}]
