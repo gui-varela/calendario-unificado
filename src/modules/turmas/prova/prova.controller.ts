@@ -1,11 +1,13 @@
-import { Body, Controller } from '@nestjs/common';
+import { Body, Controller, Query } from '@nestjs/common';
 import {
   Delete,
+  Get,
   Post,
   Put,
 } from '@nestjs/common/decorators/http/request-mapping.decorator';
 import { ProvaDTO } from './prova.dto';
 import { ProvaService } from './prova.service';
+import { UserDTO } from 'src/modules/accounts/user/user.dto';
 
 @Controller('prova')
 export class ProvaController {
@@ -24,5 +26,10 @@ export class ProvaController {
   @Delete()
   async remove(@Body() data: ProvaDTO) {
     return this.provaService.remove(data);
+  }
+
+  @Get()
+  async findProvasPorUsuario(@Query('username') username: string) {
+    return this.provaService.findProvasPorUsuario(username);
   }
 }

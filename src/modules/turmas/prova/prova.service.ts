@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { hash } from 'bcrypt';
 import { AppError } from 'src/errors/AppError';
 import { PrismaService } from '../../../database/PrismaService';
 import { ProvaDTO } from './prova.dto';
+import { DisciplinaService } from '../disciplina/disciplina.service';
+import { Prova } from '@prisma/client';
 
 @Injectable()
 export class ProvaService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private disciplinaService: DisciplinaService,
+  ) {}
 
   async create({ nome, data, disciplinaId }: ProvaDTO) {
     const disciplinaExists = await this.prisma.disciplina.findUnique({
@@ -106,5 +110,62 @@ export class ProvaService {
     });
 
     return prova;
+  }
+
+  async findProvasPorDisciplina(disciplinaId: string) {
+    const provas = await this.prisma.prova.findMany({
+      where: {
+        disciplinaId,
+      },
+    });
+
+    return provas;
+  }
+
+  async findProvasPorUsuario(username: string) {
+    const usuario = await this.prisma.usuario.findUnique({
+      where: {
+        username,
+      },
+    });
+
+    if (!usuario) {
+      throw new AppError('Usuário não existe');
+    }
+
+    const disciplinasUsuario =
+      await this.disciplinaService.findDisciplinasPorUsuario(usuario.username);
+
+    if (!disciplinasUsuario) {
+      throw new AppError('Usuário não está inscrito em nenhuma disciplina');
+    }
+
+    const provasUsuario: ProvaDTO[] = [];
+
+    await Promise.all(
+      disciplinasUsuario.map(async (disciplina) => {
+        const provas = await this.findProvasPorDisciplina(disciplina.id);
+
+        provas.forEach((prova) => {
+          const provaComNomeDisciplina = {
+            ...prova,
+            disciplina: disciplina.nome,
+          };
+          provasUsuario.push(provaComNomeDisciplina);
+        });
+      }),
+    );
+
+    const perfil = await this.prisma.perfil.findUnique({
+      where: {
+        id: usuario.perfilId,
+      },
+    });
+
+    if (provasUsuario.length === 0) {
+      throw new AppError(`O ${perfil.nome} não tem provas agendadas`);
+    }
+
+    return provasUsuario.sort();
   }
 }
