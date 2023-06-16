@@ -76,7 +76,17 @@ export class AlunoService {
       throw new AppError('Este usuário não tem perfil de aluno');
     }
 
-    const existeDisciplina = await this.prisma.disciplina.findFirst({
+    const existeDisciplina = await this.prisma.disciplina.findUnique({
+      where: {
+        id: disciplinaId,
+      },
+    });
+
+    if (!existeDisciplina) {
+      throw new AppError('Disciplina não existe');
+    }
+
+    const alunoInscrito = await this.prisma.disciplina.findFirst({
       where: {
         id: disciplinaId,
         Aluno: {
@@ -87,7 +97,7 @@ export class AlunoService {
       },
     });
 
-    if (existeDisciplina) {
+    if (alunoInscrito) {
       throw new AppError('Disciplina já adicionada');
     }
 
@@ -132,7 +142,17 @@ export class AlunoService {
       throw new AppError('Este usuário não tem perfil de aluno');
     }
 
-    const existeDisciplina = await this.prisma.disciplina.findFirst({
+    const existeDisciplina = await this.prisma.disciplina.findUnique({
+      where: {
+        id: disciplinaId,
+      },
+    });
+
+    if (!existeDisciplina) {
+      throw new AppError('Disciplina não existe');
+    }
+
+    const alunoInscrito = await this.prisma.disciplina.findFirst({
       where: {
         id: disciplinaId,
         Aluno: {
@@ -143,7 +163,7 @@ export class AlunoService {
       },
     });
 
-    if (!existeDisciplina) {
+    if (!alunoInscrito) {
       throw new AppError('Aluno não cursa essa disciplina');
     }
 
