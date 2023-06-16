@@ -3,6 +3,7 @@ import { AppError } from 'src/errors/AppError';
 import { PrismaService } from '../../../database/PrismaService';
 import { DisciplinaDTO } from './disciplina.dto';
 import { DisciplinaAlunoDTO } from './disciplina-aluno.dto';
+import { Disciplina } from '@prisma/client';
 
 @Injectable()
 export class DisciplinaService {
@@ -18,7 +19,8 @@ export class DisciplinaService {
     return perfil.codigo === 'P';
   }
 
-  async create({ nome, codigo, usuarioCriadorId }: DisciplinaDTO) {
+  async create({ nome, codigo, nomeCurso, usuarioCriadorId }: DisciplinaDTO) {
+    let disciplina: Disciplina;
     const disciplinaAlreadyExists = await this.prisma.disciplina.findUnique({
       where: {
         codigo,
@@ -39,18 +41,33 @@ export class DisciplinaService {
       throw new AppError('Professor não existe');
     }
 
-    const disciplina = await this.prisma.disciplina.create({
+    const cursoExists = await this.prisma.curso.findUnique({
+      where: {
+        nome: nomeCurso,
+      },
+    });
+
+    if (!cursoExists) {
+      throw new AppError('Curso não existe');
+    }
+
+    disciplina = await this.prisma.disciplina.create({
       data: {
         nome,
         codigo,
         usuarioCriadorId: professor.id,
+        Curso: {
+          connect: {
+            nome: nomeCurso
+          }
+        }
       },
     });
 
     return disciplina;
   }
 
-  async update({ nome, codigo }: DisciplinaDTO) {
+  async update({ nome, codigo, nomeCurso }: DisciplinaDTO) {
     const disciplinaExists = await this.prisma.disciplina.findUnique({
       where: {
         codigo,
@@ -61,6 +78,16 @@ export class DisciplinaService {
       throw new AppError('Disciplina não existe');
     }
 
+    const cursoExists = await this.prisma.curso.findUnique({
+      where: {
+        nome: nomeCurso,
+      },
+    });
+
+    if (!cursoExists) {
+      throw new AppError('Curso não existe');
+    }
+
     const disciplina = await this.prisma.disciplina.update({
       where: {
         codigo: codigo,
@@ -68,6 +95,11 @@ export class DisciplinaService {
       data: {
         nome,
         codigo,
+        Curso: {
+          connect: {
+            nome: nomeCurso
+          }
+        },
       },
     });
 
@@ -111,7 +143,7 @@ export class DisciplinaService {
   }
 
   async findDisciplinasPorUsuario(username: string) {
-    let disciplinas;
+    let disciplinas: Disciplina[];
     const usuario = await this.prisma.usuario.findUnique({
       where: {
         username,
