@@ -20,6 +20,7 @@ export class EnsureAuthenticated implements NestMiddleware {
     }
 
     const [, token] = authHeader.split(' ');
+    
 
     try {
       const { sub: user_id } = verify(
@@ -29,7 +30,7 @@ export class EnsureAuthenticated implements NestMiddleware {
 
       console.log(user_id);
 
-      const user = await this.prisma.user.findUnique({
+      const user = await this.prisma.usuario.findUnique({
         where: {
           id: user_id,
         },

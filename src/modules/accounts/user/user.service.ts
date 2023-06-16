@@ -8,34 +8,67 @@ import { UserDTO } from './user.dto';
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  async create({ name, username, password, isAdmin = false }: UserDTO) {
-    const userAlreadyExists = await this.prisma.user.findUnique({
+  async create({ email, username, password, codigoPerfil }: UserDTO) {
+    const userAlreadyExists = await this.prisma.usuario.findUnique({
       where: {
         username,
       },
     });
 
     if (userAlreadyExists) {
-      throw new AppError('Username already used');
+      throw new AppError('Nome de usuário já em uso');
+    }
+
+    const emailAlreadyExists = await this.prisma.usuario.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (emailAlreadyExists) {
+      throw new AppError('Email já em uso');
     }
 
     const passwordHash = await hash(password, 8);
 
-    const user = await this.prisma.user.create({
-      data: {
-        name,
-        username,
-        password: passwordHash,
-        isAdmin,
+    const perfil = await this.prisma.perfil.findUnique({
+      where: {
+        codigo: codigoPerfil,
       },
     });
 
+    if (!perfil) {
+      throw new AppError('Perfil não encontrado');
+    }
+
+    const user = await this.prisma.usuario.create({
+      data: {
+        email,
+        username,
+        password: passwordHash,
+        perfilId: perfil.id,
+      },
+    });
+
+    if (perfil.codigo === 'P') {
+      await this.prisma.professor.create({
+        data: {
+          usuarioId: user.id,
+        },
+      });
+    } else {
+      await this.prisma.aluno.create({
+        data: {
+          usuarioId: user.id,
+        },
+      });
+    }
+
     return {
       id: user.id,
-      name: user.name,
+      email: user.email,
       username: user.username,
-      isAdmin: user.isAdmin,
-      created_at: user.created_at,
+      perfilId: user.perfilId,
     };
   }
 }

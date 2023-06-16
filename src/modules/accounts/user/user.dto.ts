@@ -1,8 +1,7 @@
 export type UserDTO = {
   id?: string;
-  name: string;
+  email: string;
   username: string;
   password: string;
-  isAdmin?: boolean;
-  updated_at: Date;
+  codigoPerfil: string;
 };
