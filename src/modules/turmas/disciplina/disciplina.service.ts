@@ -9,7 +9,7 @@ import { ProfessorService } from 'src/modules/perfis/professor/professor.service
 export class DisciplinaService {
   constructor(private prisma: PrismaService) { }
 
-  async create({ nome, codigo, nomeCurso, usuarioCriadorId }: DisciplinaDTO) {
+  async create({ nome, codigo, nomesCursos, usuarioCriadorId }: DisciplinaDTO) {
     const disciplinaAlreadyExists = await this.prisma.disciplina.findUnique({
       where: {
         codigo,
@@ -30,33 +30,43 @@ export class DisciplinaService {
       throw new AppError('Professor não existe');
     }
 
-    const cursoExists = await this.prisma.curso.findUnique({
-      where: {
-        nome: nomeCurso,
-      },
-    });
-
-    if (!cursoExists) {
-      throw new AppError('Curso não existe');
-    }
-
     const disciplina = await this.prisma.disciplina.create({
       data: {
         nome,
         codigo,
         usuarioCriadorId: professor.id,
-        Curso: {
-          connect: {
-            nome: nomeCurso,
+      },
+    });
+
+    nomesCursos.forEach(async (curso) => {
+      const cursoExists = await this.prisma.curso.findUnique({
+        where: {
+          nome: curso,
+        },
+      });
+
+      if (!cursoExists) {
+        return;
+      }
+
+      await this.prisma.disciplina.update({
+        where: {
+          codigo: codigo,
+        },
+        data: {
+          Curso: {
+            connect: {
+              nome: curso,
+            },
           },
         },
-      },
+      });
     });
 
     return disciplina;
   }
 
-  async update({ nome, codigo, nomeCurso }: DisciplinaDTO) {
+  async update({ nome, codigo, nomesCursos }: DisciplinaDTO) {
     const disciplinaExists = await this.prisma.disciplina.findUnique({
       where: {
         codigo,
@@ -67,16 +77,6 @@ export class DisciplinaService {
       throw new AppError('Disciplina não existe');
     }
 
-    const cursoExists = await this.prisma.curso.findUnique({
-      where: {
-        nome: nomeCurso,
-      },
-    });
-
-    if (!cursoExists) {
-      throw new AppError('Curso não existe');
-    }
-
     const disciplina = await this.prisma.disciplina.update({
       where: {
         codigo: codigo,
@@ -84,12 +84,32 @@ export class DisciplinaService {
       data: {
         nome,
         codigo,
-        Curso: {
-          connect: {
-            nome: nomeCurso,
+      },
+    });
+
+    nomesCursos.forEach(async (curso) => {
+      const cursoExists = await this.prisma.curso.findUnique({
+        where: {
+          nome: curso,
+        },
+      });
+
+      if (!cursoExists) {
+        return;
+      }
+
+      await this.prisma.disciplina.update({
+        where: {
+          codigo: codigo,
+        },
+        data: {
+          Curso: {
+            connect: {
+              nome: curso,
+            },
           },
         },
-      },
+      });
     });
 
     return disciplina;

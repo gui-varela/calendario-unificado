@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { AppError } from 'src/errors/AppError';
 import { PrismaService } from '../../../database/PrismaService';
 import { CursoDTO } from './curso.dto';
-import { DisciplinaDTO } from '../disciplina/disciplina.dto';
+import { CursoDisciplinaDTO } from './curso-disciplina.dto';
 
 @Injectable()
 export class CursoService {
@@ -75,7 +75,7 @@ export class CursoService {
     return curso;
   }
 
-  async removeCursoDisciplina({ codigo, nomeCurso }: DisciplinaDTO) {
+  async removeCursoDisciplina({ codigo, nomeCurso }: CursoDisciplinaDTO) {
     const disciplinaExists = await this.prisma.disciplina.findUnique({
       where: {
         codigo,
@@ -112,7 +112,7 @@ export class CursoService {
     return disciplina;
   }
 
-  async addCursoDisciplina({ codigo, nomeCurso }: DisciplinaDTO) {
+  async addCursoDisciplina({ codigo, nomeCurso }: CursoDisciplinaDTO) {
     const disciplinaExists = await this.prisma.disciplina.findUnique({
       where: {
         codigo,
