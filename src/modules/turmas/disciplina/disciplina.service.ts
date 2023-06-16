@@ -2,22 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { AppError } from 'src/errors/AppError';
 import { PrismaService } from '../../../database/PrismaService';
 import { DisciplinaDTO } from './disciplina.dto';
-import { DisciplinaAlunoDTO } from './disciplina-aluno.dto';
 import { Disciplina } from '@prisma/client';
+import { ProfessorService } from 'src/modules/perfis/professor/professor.service';
 
 @Injectable()
 export class DisciplinaService {
-  constructor(private prisma: PrismaService) {}
-
-  public async isProfessor(id: string) {
-    const perfil = await this.prisma.perfil.findUnique({
-      where: {
-        id,
-      },
-    });
-
-    return perfil.codigo === 'P';
-  }
+  constructor(private prisma: PrismaService) { }
 
   async create({ nome, codigo, nomeCurso, usuarioCriadorId }: DisciplinaDTO) {
     const disciplinaAlreadyExists = await this.prisma.disciplina.findUnique({
@@ -152,7 +142,13 @@ export class DisciplinaService {
       throw new AppError('Usuário não existe');
     }
 
-    if ((await this.isProfessor(usuario.perfilId)) === true) {
+    const perfil = await this.prisma.perfil.findUnique({
+      where: {
+        id: usuario.perfilId,
+      },
+    });
+
+    if (ProfessorService.isUsuarioProfessor(perfil.codigo)) {
       const professor = await this.prisma.professor.findUnique({
         where: {
           usuarioId: usuario.id,
@@ -188,101 +184,6 @@ export class DisciplinaService {
 
       return disciplinasAluno;
     }
-  }
-
-  async addDisciplinaAoAluno({ username, disciplinaId }: DisciplinaAlunoDTO) {
-    const usuario = await this.prisma.usuario.findUnique({
-      where: {
-        username,
-      },
-    });
-
-    if (!usuario) {
-      throw new AppError('Usuário não existe');
-    }
-
-    if ((await this.isProfessor(usuario.perfilId)) === true) {
-      throw new AppError('Usuário não é aluno');
-    }
-
-    const existeDisciplina = await this.prisma.disciplina.findFirst({
-      where: {
-        id: disciplinaId,
-        Aluno: {
-          some: {
-            usuarioId: usuario.id,
-          },
-        },
-      },
-    });
-
-    if (existeDisciplina) {
-      throw new AppError('Disciplina já adicionada');
-    }
-
-    const disciplina = await this.prisma.disciplina.update({
-      where: {
-        id: disciplinaId,
-      },
-      data: {
-        Aluno: {
-          connect: {
-            usuarioId: usuario.id,
-          },
-        },
-      },
-    });
-
-    return disciplina;
-  }
-
-  async removeDisciplinaDoAluno({
-    username,
-    disciplinaId,
-  }: DisciplinaAlunoDTO) {
-    const usuario = await this.prisma.usuario.findUnique({
-      where: {
-        username,
-      },
-    });
-
-    if (!usuario) {
-      throw new AppError('Usuário não existe');
-    }
-
-    if ((await this.isProfessor(usuario.perfilId)) === true) {
-      throw new AppError('Usuário não é aluno');
-    }
-
-    const existeDisciplina = await this.prisma.disciplina.findFirst({
-      where: {
-        id: disciplinaId,
-        Aluno: {
-          some: {
-            usuarioId: usuario.id,
-          },
-        },
-      },
-    });
-
-    if (!existeDisciplina) {
-      throw new AppError('Aluno não cursa essa disciplina');
-    }
-
-    const disciplina = await this.prisma.disciplina.update({
-      where: {
-        id: disciplinaId,
-      },
-      data: {
-        Aluno: {
-          disconnect: {
-            usuarioId: usuario.id,
-          },
-        },
-      },
-    });
-
-    return disciplina;
   }
 
   async findDisciplinasPorNomeOuCodigo(nome?: string, codigo?: string) {

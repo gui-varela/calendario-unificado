@@ -8,11 +8,11 @@ import {
 
 import { DisciplinaDTO } from './disciplina.dto';
 import { DisciplinaService } from './disciplina.service';
-import { DisciplinaAlunoDTO } from './disciplina-aluno.dto';
+import { DisciplinaAlunoDTO } from '../../perfis/aluno/disciplina-aluno.dto';
 
 @Controller('disciplina')
 export class DisciplinaController {
-  constructor(private readonly disciplinaService: DisciplinaService) {}
+  constructor(private readonly disciplinaService: DisciplinaService) { }
 
   @Post()
   async create(@Body() data: DisciplinaDTO) {
@@ -32,16 +32,6 @@ export class DisciplinaController {
   @Get()
   async findDisciplinasPorUsuario(@Query('username') username: string) {
     return this.disciplinaService.findDisciplinasPorUsuario(username);
-  }
-
-  @Post('/aluno')
-  async addDisciplinaAoAluno(@Body() data: DisciplinaAlunoDTO) {
-    return this.disciplinaService.addDisciplinaAoAluno(data);
-  }
-
-  @Delete('/aluno')
-  async removeDisciplinaDoAluno(@Body() data: DisciplinaAlunoDTO) {
-    return this.disciplinaService.removeDisciplinaDoAluno(data);
   }
 
   @Get('/busca')
