@@ -16,10 +16,11 @@ export class DisciplinaService {
       },
     });
 
-    return perfil.codigo == 'P';
+    return perfil.codigo === 'P';
   }
 
-  async create({ nome, codigo, usuarioCriadorId }: DisciplinaDTO) {
+  async create({ nome, codigo, nomeCurso, usuarioCriadorId }: DisciplinaDTO) {
+    let disciplina: Disciplina;
     const disciplinaAlreadyExists = await this.prisma.disciplina.findUnique({
       where: {
         codigo,
@@ -40,18 +41,33 @@ export class DisciplinaService {
       throw new AppError('Professor não existe');
     }
 
-    const disciplina = await this.prisma.disciplina.create({
+    const cursoExists = await this.prisma.curso.findUnique({
+      where: {
+        nome: nomeCurso,
+      },
+    });
+
+    if (!cursoExists) {
+      throw new AppError('Curso não existe');
+    }
+
+    disciplina = await this.prisma.disciplina.create({
       data: {
         nome,
         codigo,
         usuarioCriadorId: professor.id,
+        Curso: {
+          connect: {
+            nome: nomeCurso
+          }
+        }
       },
     });
 
     return disciplina;
   }
 
-  async update({ nome, codigo }: DisciplinaDTO) {
+  async update({ nome, codigo, nomeCurso }: DisciplinaDTO) {
     const disciplinaExists = await this.prisma.disciplina.findUnique({
       where: {
         codigo,
@@ -62,6 +78,16 @@ export class DisciplinaService {
       throw new AppError('Disciplina não existe');
     }
 
+    const cursoExists = await this.prisma.curso.findUnique({
+      where: {
+        nome: nomeCurso,
+      },
+    });
+
+    if (!cursoExists) {
+      throw new AppError('Curso não existe');
+    }
+
     const disciplina = await this.prisma.disciplina.update({
       where: {
         codigo: codigo,
@@ -69,6 +95,11 @@ export class DisciplinaService {
       data: {
         nome,
         codigo,
+        Curso: {
+          connect: {
+            nome: nomeCurso
+          }
+        },
       },
     });
 
@@ -160,6 +191,80 @@ export class DisciplinaService {
     }
   }
 
+  async removeCursoDisciplina({ codigo, nomeCurso }: DisciplinaDTO) {
+    const disciplinaExists = await this.prisma.disciplina.findUnique({
+      where: {
+        codigo,
+      },
+    });
+
+    if (!disciplinaExists) {
+      throw new AppError('Disciplina não existe');
+    }
+
+    const cursoExists = await this.prisma.curso.findUnique({
+      where: {
+        nome: nomeCurso,
+      },
+    });
+
+    if (!cursoExists) {
+      throw new AppError('Curso não existe');
+    }
+
+    const disciplina = await this.prisma.disciplina.update({
+      where: {
+        codigo: codigo,
+      },
+      data: {
+        Curso: {
+          disconnect: {
+            nome: nomeCurso
+          }
+        },
+      },
+    });
+
+    return disciplina;
+  }
+
+  async addCursoDisciplina({ codigo, nomeCurso }: DisciplinaDTO) {
+    const disciplinaExists = await this.prisma.disciplina.findUnique({
+      where: {
+        codigo,
+      },
+    });
+
+    if (!disciplinaExists) {
+      throw new AppError('Disciplina não existe');
+    }
+
+    const cursoExists = await this.prisma.curso.findUnique({
+      where: {
+        nome: nomeCurso,
+      },
+    });
+
+    if (!cursoExists) {
+      throw new AppError('Curso não existe');
+    }
+
+    const disciplina = await this.prisma.disciplina.update({
+      where: {
+        codigo: codigo,
+      },
+      data: {
+        Curso: {
+          connect: {
+            nome: nomeCurso
+          }
+        },
+      },
+    });
+
+    return disciplina;
+  }
+
   async addDisciplinaAoAluno({ username, disciplinaId }: DisciplinaAlunoDTO) {
     const usuario = await this.prisma.usuario.findUnique({
       where: {
@@ -171,7 +276,7 @@ export class DisciplinaService {
       throw new AppError('Usuário não existe');
     }
 
-    if ((await this.isProfessor(usuario.perfilId)) == true) {
+    if ((await this.isProfessor(usuario.perfilId)) === true) {
       throw new AppError('Usuário não é aluno');
     }
 
@@ -220,7 +325,7 @@ export class DisciplinaService {
       throw new AppError('Usuário não existe');
     }
 
-    if ((await this.isProfessor(usuario.perfilId)) == true) {
+    if ((await this.isProfessor(usuario.perfilId)) === true) {
       throw new AppError('Usuário não é aluno');
     }
 
@@ -253,5 +358,31 @@ export class DisciplinaService {
     });
 
     return disciplina;
+  }
+
+  async findDisciplinasPorNomeOuCodigo(nome?: string, codigo?: string) {
+    const disciplinas = await this.prisma.disciplina.findMany({
+      where: {
+        OR: [
+          {
+            codigo: {
+              contains: codigo,
+            },
+            nome: {
+              contains: nome,
+            },
+          },
+        ],
+      },
+      orderBy: {
+        nome: 'asc'
+      },
+    });
+
+    if (disciplinas.length === 0) {
+      throw new AppError('Nenhuma disciplina encontrada');
+    }
+
+    return disciplinas;
   }
 }

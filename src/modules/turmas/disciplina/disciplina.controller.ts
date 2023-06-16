@@ -43,4 +43,19 @@ export class DisciplinaController {
   async removeDisciplinaDoAluno(@Body() data: DisciplinaAlunoDTO) {
     return this.disciplinaService.removeDisciplinaDoAluno(data);
   }
+
+  @Get('/busca')
+  async findDisciplinasPorNomeOuCodigo(@Query('nome') nome?: string, @Query('codigo') codigo?: string) {
+    return this.disciplinaService.findDisciplinasPorNomeOuCodigo(nome, codigo);
+  }
+
+  @Post('/curso')
+  async addCursoDisciplina(@Body() data: DisciplinaDTO) {
+    return this.disciplinaService.removeCursoDisciplina(data);
+  }
+
+  @Delete('/curso')
+  async removeCursoDisciplina(@Body() data: DisciplinaDTO) {
+    return this.disciplinaService.removeCursoDisciplina(data);
+  }
 }

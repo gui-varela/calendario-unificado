@@ -27,9 +27,19 @@ export class ProfessorService {
       throw new AppError('Usuário não existe');
     }
 
-    const ID_PERFIL_PROFESSOR = 'd75a712e-1879-4da7-a4ac-f9950fc239f4';
+    const perfil = await this.prisma.perfil.findUnique({
+      where: {
+        id: usuario.perfilId,
+      },
+    });
 
-    const isUsuarioProfessor = usuario.perfilId === ID_PERFIL_PROFESSOR;
+    if (!perfil) {
+      throw new AppError('Perfil não existe');
+    }
+
+    const CODIGO_PERFIL_PROFESSOR = 'P';
+
+    const isUsuarioProfessor = perfil.codigo === CODIGO_PERFIL_PROFESSOR;
 
     if (!isUsuarioProfessor) {
       throw new AppError('Este usuário não tem perfil de professor');

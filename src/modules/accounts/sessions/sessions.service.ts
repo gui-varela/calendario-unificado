@@ -17,13 +17,23 @@ export class SessionsService {
     });
 
     if (!user) {
-      throw new AppError('Incorrect email or password', 401);
+      throw new AppError('Usuário ou senha incorretos', 401);
+    }
+
+    const sessionExists = await this.prisma.session.findUnique({
+      where: {
+        usuarioId: user.id,
+      },
+    });
+
+    if (sessionExists) {
+      throw new AppError('Usuário já possui sessão', 401);
     }
 
     const passwordMatch = await compare(password, user.password);
 
     if (!passwordMatch) {
-      throw new AppError('Incorrect email or password', 401);
+      throw new AppError('Usuário ou senha incorretos', 401);
     }
 
     const token = sign({}, '22547f9e2c15eafc93cf454907f431f9', {
@@ -33,7 +43,7 @@ export class SessionsService {
 
     const userReturn = {
       user: {
-        password: user.email,
+        email: user.email,
         username: user.username,
       },
     };
@@ -46,5 +56,42 @@ export class SessionsService {
     });
 
     return { session, userReturn };
+  }
+
+  async logout({ username}: SessionDTO) {
+    const user = await this.prisma.usuario.findUnique({
+      where: {
+        username,
+      },
+    });
+
+    if (!user) {
+      throw new AppError('Usuário não encontrado', 401);
+    }
+
+    const sessionExists = await this.prisma.session.findUnique({
+      where: {
+        usuarioId: user.id,
+      },
+    });
+
+    if (!sessionExists) {
+      throw new AppError('Usuário não possui sessão', 401);
+    }
+
+    const userReturn = {
+      user: {
+        email: user.email,
+        username: user.username,
+      },
+    };
+
+    const session = await this.prisma.session.delete({
+      where: {
+        usuarioId: user.id,
+      },
+    });
+
+    return { userReturn };
   }
 }

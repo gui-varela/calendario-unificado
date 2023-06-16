@@ -27,9 +27,19 @@ export class AlunoService {
       throw new AppError('Usuário não existe');
     }
 
-    const ID_PERFIL_ALUNO = '3f40be47-c0ca-4512-8e13-5e407b52aa93';
+    const perfil = await this.prisma.perfil.findUnique({
+      where: {
+        id: usuario.perfilId,
+      },
+    });
 
-    const isUsuarioAluno = usuario.perfilId === ID_PERFIL_ALUNO;
+    if (!perfil) {
+      throw new AppError('Perfil não existe');
+    }
+
+    const CODIGO_PERFIL_ALUNO = 'A';
+
+    const isUsuarioAluno = perfil.codigo === CODIGO_PERFIL_ALUNO;
 
     if (!isUsuarioAluno) {
       throw new AppError('Este usuário não tem perfil de aluno');

@@ -7,6 +7,7 @@ import { DisciplinaModule } from './modules/turmas/disciplina/disciplina.module'
 import { ProvaModule } from './modules/turmas/prova/prova.module';
 import { AlunoModule } from './modules/perfis/aluno/aluno.module';
 import { ProfessorModule } from './modules/perfis/professor/professor.module';
+import { CursoModule } from './modules/turmas/curso/curso.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ProfessorModule } from './modules/perfis/professor/professor.module';
     ProvaModule,
     AlunoModule,
     ProfessorModule,
+    CursoModule
   ],
   controllers: [AppController],
   providers: [AppService],
