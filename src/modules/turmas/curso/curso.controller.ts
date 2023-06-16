@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common/decorators/http/request-mapping.decorator';
 import { CursoDTO } from './curso.dto';
 import { CursoService } from './curso.service';
+import { DisciplinaDTO } from '../disciplina/disciplina.dto';
 
 @Controller('curso')
 export class CursoController {
@@ -25,6 +26,16 @@ export class CursoController {
   @Delete()
   async remove(@Body() data: CursoDTO) {
     return this.cursoService.remove(data);
+  }
+
+  @Post('/disciplina')
+  async addCursoDisciplina(@Body() data: DisciplinaDTO) {
+    return this.cursoService.addCursoDisciplina(data);
+  }
+
+  @Delete('/disciplina')
+  async removeCursoDisciplina(@Body() data: DisciplinaDTO) {
+    return this.cursoService.removeCursoDisciplina(data);
   }
 
   @Get()

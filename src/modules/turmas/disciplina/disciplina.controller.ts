@@ -51,14 +51,4 @@ export class DisciplinaController {
   ) {
     return this.disciplinaService.findDisciplinasPorNomeOuCodigo(nome, codigo);
   }
-
-  @Post('/curso')
-  async addCursoDisciplina(@Body() data: DisciplinaDTO) {
-    return this.disciplinaService.addCursoDisciplina(data);
-  }
-
-  @Delete('/curso')
-  async removeCursoDisciplina(@Body() data: DisciplinaDTO) {
-    return this.disciplinaService.removeCursoDisciplina(data);
-  }
 }
