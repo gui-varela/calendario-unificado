@@ -27,7 +27,11 @@ export class SessionsService {
     });
 
     if (sessionExists) {
-      throw new AppError('Usuário já possui sessão', 401);
+      await this.prisma.session.delete({
+        where: {
+          usuarioId: user.id,
+        },
+      });
     }
 
     const passwordMatch = await compare(password, user.password);
@@ -41,10 +45,17 @@ export class SessionsService {
       expiresIn: '1d',
     });
 
+    const perfil = await this.prisma.perfil.findUnique({
+      where: {
+        id: user.perfilId,
+      },
+    });
+
     const userReturn = {
       user: {
         email: user.email,
         username: user.username,
+        perfil: perfil.nome,
       },
     };
 
