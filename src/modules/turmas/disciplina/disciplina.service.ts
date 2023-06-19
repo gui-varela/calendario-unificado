@@ -7,7 +7,7 @@ import { ProfessorService } from 'src/modules/perfis/professor/professor.service
 
 @Injectable()
 export class DisciplinaService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async create({ nome, codigo, nomesCursos, usuarioCriadorId }: DisciplinaDTO) {
     const disciplinaAlreadyExists = await this.prisma.disciplina.findUnique({
@@ -115,10 +115,10 @@ export class DisciplinaService {
     return disciplina;
   }
 
-  async remove({ codigo }: DisciplinaDTO) {
+  async remove(codigo: string) {
     const disciplinaExists = await this.prisma.disciplina.findUnique({
       where: {
-        codigo: codigo,
+        codigo,
       },
     });
 
@@ -131,6 +131,10 @@ export class DisciplinaService {
         disciplinaId: disciplinaExists.id,
       },
     });
+
+    if (!provasExists) {
+      throw new AppError('Erro com as provas');
+    }
 
     if (provasExists) {
       provasExists.forEach(async (prova) => {
@@ -211,9 +215,9 @@ export class DisciplinaService {
       where: {
         disciplina: {
           some: {
-            codigo: codigo
-          }
-        }
+            codigo: codigo,
+          },
+        },
       },
     });
     return cursos;
