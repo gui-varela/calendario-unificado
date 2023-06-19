@@ -12,7 +12,7 @@ import { DisciplinaAlunoDTO } from '../../perfis/aluno/disciplina-aluno.dto';
 
 @Controller('disciplina')
 export class DisciplinaController {
-  constructor(private readonly disciplinaService: DisciplinaService) { }
+  constructor(private readonly disciplinaService: DisciplinaService) {}
 
   @Post()
   async create(@Body() data: DisciplinaDTO) {
@@ -25,8 +25,8 @@ export class DisciplinaController {
   }
 
   @Delete()
-  async remove(@Body() data: DisciplinaDTO) {
-    return this.disciplinaService.remove(data);
+  async remove(@Query('codigo') codigo: string) {
+    return this.disciplinaService.remove(codigo);
   }
 
   @Get()
