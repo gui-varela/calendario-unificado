@@ -8,7 +8,6 @@ import {
 
 import { DisciplinaDTO } from './disciplina.dto';
 import { DisciplinaService } from './disciplina.service';
-import { DisciplinaAlunoDTO } from '../../perfis/aluno/disciplina-aluno.dto';
 
 @Controller('disciplina')
 export class DisciplinaController {
@@ -45,5 +44,12 @@ export class DisciplinaController {
     @Query('codigo') codigo?: string,
   ) {
     return this.disciplinaService.findDisciplinasPorNomeOuCodigo(nome, codigo);
+  }
+
+  @Get('/detalhes')
+  async getDetalhesDisciplnha(
+    @Query('codigo') codigo?: string,
+  ) {
+    return this.disciplinaService.getDetalhesDisciplnha(codigo);
   }
 }

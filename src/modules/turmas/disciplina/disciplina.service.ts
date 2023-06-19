@@ -244,4 +244,47 @@ export class DisciplinaService {
 
     return disciplinas;
   }
+
+  async getDetalhesDisciplnha(codigo: string) {
+    const disciplina = await this.prisma.disciplina.findUnique({
+      where: {
+        codigo: codigo
+      },
+    });
+
+    if (!disciplina) {
+      throw new AppError('Nenhuma disciplina encontrada');
+    }
+
+    const cursos = await this.prisma.curso.findMany({
+      where: {
+        disciplina: {
+          some: {
+            codigo: codigo
+          }
+        }
+      },
+    });
+
+    let nomesCurso = []
+
+    cursos.forEach((curso) => { return nomesCurso.push(curso.nome)});
+
+    const provas = await this.prisma.prova.findMany({
+      where: {
+        disciplinaId: disciplina.id,
+      },
+    });
+
+    const detalhesDisciplina = [
+      {
+        "codigo": codigo,
+        "nome": disciplina.nome,
+        "cursos": nomesCurso,
+        "provas": provas
+      }
+    ]
+
+    return detalhesDisciplina;
+  }
 }
