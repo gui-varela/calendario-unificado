@@ -34,6 +34,11 @@ export class DisciplinaController {
     return this.disciplinaService.findDisciplinasPorUsuario(username);
   }
 
+  @Get('/cursos')
+  async findCursosDaDisciplina(@Body() data: DisciplinaDTO) {
+    return this.disciplinaService.findCursosDaDisciplina(data);
+  }
+
   @Get('/busca')
   async findDisciplinasPorNomeOuCodigo(
     @Query('nome') nome?: string,

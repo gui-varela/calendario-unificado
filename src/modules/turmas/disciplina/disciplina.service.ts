@@ -206,6 +206,19 @@ export class DisciplinaService {
     }
   }
 
+  async findCursosDaDisciplina({ codigo }: DisciplinaDTO) {
+    const cursos = await this.prisma.curso.findMany({
+      where: {
+        disciplina: {
+          some: {
+            codigo: codigo
+          }
+        }
+      },
+    });
+    return cursos;
+  }
+
   async findDisciplinasPorNomeOuCodigo(nome?: string, codigo?: string) {
     const disciplinas = await this.prisma.disciplina.findMany({
       where: {
