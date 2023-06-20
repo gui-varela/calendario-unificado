@@ -6,7 +6,8 @@
 
 O projeto ainda está em desenvolvimento e as próximas atualizações serão voltadas nas seguintes tarefas:
 
-- [ ] Tarefa 1 ...
+- [ ] Testes da aplicação
+- [ ] Otimização de deploy
 
 ## 💻 Pré-requisitos
 
