@@ -24,8 +24,8 @@ export class DisciplinaController {
   }
 
   @Delete()
-  async remove(@Query('codigo') codigo: string) {
-    return this.disciplinaService.remove(codigo);
+  async remove(@Body() data: DisciplinaDTO) {
+    return this.disciplinaService.remove(data);
   }
 
   @Get()
@@ -51,5 +51,12 @@ export class DisciplinaController {
     @Query('codigo') codigo?: string,
   ) {
     return this.disciplinaService.getDetalhesDisciplnha(codigo);
+  }
+
+  @Get('/lista')
+  async getDisciplinas(
+    @Query('username') username: string,
+  ) {
+    return this.disciplinaService.getDisciplinas(username);
   }
 }

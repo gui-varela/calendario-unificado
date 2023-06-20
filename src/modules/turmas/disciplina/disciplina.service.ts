@@ -4,10 +4,11 @@ import { PrismaService } from '../../../database/PrismaService';
 import { DisciplinaDTO } from './disciplina.dto';
 import { Disciplina } from '@prisma/client';
 import { ProfessorService } from 'src/modules/perfis/professor/professor.service';
+import { AlunoService } from 'src/modules/perfis/aluno/aluno.service';
 
 @Injectable()
 export class DisciplinaService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async create({ nome, codigo, nomesCursos, usuarioCriadorId }: DisciplinaDTO) {
     const disciplinaAlreadyExists = await this.prisma.disciplina.findUnique({
@@ -115,7 +116,7 @@ export class DisciplinaService {
     return disciplina;
   }
 
-  async remove(codigo: string) {
+  async remove({ codigo }: DisciplinaDTO) {
     const disciplinaExists = await this.prisma.disciplina.findUnique({
       where: {
         codigo,
@@ -131,10 +132,6 @@ export class DisciplinaService {
         disciplinaId: disciplinaExists.id,
       },
     });
-
-    if (!provasExists) {
-      throw new AppError('Erro com as provas');
-    }
 
     if (provasExists) {
       provasExists.forEach(async (prova) => {
@@ -272,7 +269,7 @@ export class DisciplinaService {
 
     let nomesCurso = []
 
-    cursos.forEach((curso) => { return nomesCurso.push(curso.nome)});
+    cursos.forEach((curso) => { return nomesCurso.push(curso.nome) });
 
     const provas = await this.prisma.prova.findMany({
       where: {
@@ -290,5 +287,64 @@ export class DisciplinaService {
     ]
 
     return detalhesDisciplina;
+  }
+
+  async getDisciplinas(username: string) {
+    const todasDisciplinas = await this.prisma.disciplina.findMany();
+
+    if (todasDisciplinas.length === 0) {
+      throw new AppError('Nenhuma disciplina encontrada');
+    }
+
+    const usuario = await this.prisma.usuario.findUnique({
+      where: {
+        username,
+      },
+    });
+
+    if (!usuario) {
+      throw new AppError('Usuário não existe');
+    }
+
+    const perfil = await this.prisma.perfil.findUnique({
+      where: {
+        id: usuario.perfilId,
+      },
+    });
+
+    if (!perfil) {
+      throw new AppError('Perfil não existe');
+    }
+
+    if (!AlunoService.isUsuarioAluno(perfil.codigo)) {
+      throw new AppError('Este usuário não tem perfil de aluno');
+    }
+
+    const disciplinasAluno = await this.prisma.disciplina.findMany({
+      where: {
+        Aluno: {
+          some: {
+            usuarioId: usuario.id,
+          },
+        },
+      },
+    });
+
+    let disciplinas = [];
+    let disciplinaInfoAlunoInscrito: any;
+
+    todasDisciplinas.forEach((disciplina) => {
+      disciplinaInfoAlunoInscrito = disciplina;
+      disciplinasAluno.some((disciplinaAluno) => {
+        if (disciplinaAluno.id === disciplinaInfoAlunoInscrito.id) {
+          return disciplinaInfoAlunoInscrito.isAlunoInscrito = true;
+        } else {
+          return disciplinaInfoAlunoInscrito.isAlunoInscrito = false;
+        }
+      })
+      disciplinas.push(disciplinaInfoAlunoInscrito);
+    })
+
+    return disciplinas;
   }
 }

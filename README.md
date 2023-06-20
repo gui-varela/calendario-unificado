@@ -1,4 +1,4 @@
-# Calendario Unificado
+# Calendario Unificado - Backend
 
 > Projeto desenvolvido para a disciplina de Programação Avançada ministrada na Universidade Federal do Rio de Janeiro.
 
@@ -6,14 +6,15 @@
 
 O projeto ainda está em desenvolvimento e as próximas atualizações serão voltadas nas seguintes tarefas:
 
-- [ ] Tarefa 1 ...
+- [ ] Testes da aplicação
+- [ ] Otimização de deploy
 
 ## 💻 Pré-requisitos
 
 Antes de começar, verifique se você atendeu aos seguintes requisitos:
 * Você instalou a versão mais recente de Docker e Node.js
 * Você tem uma máquina Linux-Ubuntu.
-* Você leu `<guia / link / documentação_relacionada_ao_projeto>`.
+* Você leu o relatório com detalhes do projeto.
 
 ## 🚀 Instalando Calendario Unificado
 
@@ -62,22 +63,14 @@ Linux:
 
 ## ☕ Usando Calendario Unificado
 
-...
+#### Integração com frontend...
 
-## 🤝 Colaboradores
+## 🤝 Time
 
 Agradecemos às seguintes pessoas que contribuíram para este projeto:
 
 <table>
   <tr>
-    <td align="center">
-      <a href="#">
-        <img src="https://avatars.githubusercontent.com/u/33063784?v=4" width="100px;" alt="Foto do Anderson"/><br>
-        <sub>
-          <b>Anderson Sandes</b>
-        </sub>
-      </a>
-    </td>
     <td align="center">
       <a href="#">
         <img src="https://avatars.githubusercontent.com/u/52808390?v=4" width="100px;" alt="Foto do Gui"/><br>
@@ -98,7 +91,7 @@ Agradecemos às seguintes pessoas que contribuíram para este projeto:
       <a href="#">
         <img src="https://avatars.githubusercontent.com/u/73672642?v=4" width="100px;" alt="Foto do Leo"/><br>
         <sub>
-          <b>Leonardo</b>
+          <b>Leonardo Costa</b>
         </sub>
       </a>
     </td>
