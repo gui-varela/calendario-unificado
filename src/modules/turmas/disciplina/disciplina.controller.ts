@@ -52,4 +52,11 @@ export class DisciplinaController {
   ) {
     return this.disciplinaService.getDetalhesDisciplnha(codigo);
   }
+
+  @Get('/lista')
+  async getDisciplinas(
+    @Query('username') username: string,
+  ) {
+    return this.disciplinaService.getDisciplinas(username);
+  }
 }
