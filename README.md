@@ -1,4 +1,4 @@
-# Calendario Unificado
+# Calendario Unificado - Backend
 
 > Projeto desenvolvido para a disciplina de Programação Avançada ministrada na Universidade Federal do Rio de Janeiro.
 
@@ -63,7 +63,7 @@ Linux:
 
 ## ☕ Usando Calendario Unificado
 
-...
+#### Integração com frontend...
 
 ## 🤝 Time
 
