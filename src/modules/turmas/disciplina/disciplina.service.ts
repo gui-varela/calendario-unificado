@@ -267,10 +267,6 @@ export class DisciplinaService {
       },
     });
 
-    let nomesCurso = []
-
-    cursos.forEach((curso) => { return nomesCurso.push(curso.nome) });
-
     const provas = await this.prisma.prova.findMany({
       where: {
         disciplinaId: disciplina.id,
@@ -281,7 +277,7 @@ export class DisciplinaService {
       {
         "codigo": codigo,
         "nome": disciplina.nome,
-        "cursos": nomesCurso,
+        "cursos": cursos,
         "provas": provas
       }
     ]
