@@ -10,7 +10,7 @@ import { AlunoService } from 'src/modules/perfis/aluno/aluno.service';
 export class DisciplinaService {
   constructor(private prisma: PrismaService) { }
 
-  async create({ nome, codigo, nomesCursos, usuarioCriadorId }: DisciplinaDTO) {
+  async create({ nome, codigo, cursos, username }: DisciplinaDTO) {
     const disciplinaAlreadyExists = await this.prisma.disciplina.findUnique({
       where: {
         codigo,
@@ -21,9 +21,19 @@ export class DisciplinaService {
       throw new AppError('Disciplina já existe');
     }
 
+    const usuario = await this.prisma.usuario.findUnique({
+      where: {
+        username,
+      },
+    });
+
+    if (!usuario) {
+      throw new AppError('Usuário não existe');
+    }
+
     const professor = await this.prisma.professor.findUnique({
       where: {
-        usuarioId: usuarioCriadorId,
+        usuarioId: usuario.id,
       },
     });
 
@@ -39,10 +49,10 @@ export class DisciplinaService {
       },
     });
 
-    nomesCursos.forEach(async (curso) => {
+    cursos.forEach(async (curso) => {
       const cursoExists = await this.prisma.curso.findUnique({
         where: {
-          nome: curso,
+          nome: curso.nome,
         },
       });
 
@@ -57,7 +67,7 @@ export class DisciplinaService {
         data: {
           Curso: {
             connect: {
-              nome: curso,
+              nome: curso.nome,
             },
           },
         },
@@ -67,7 +77,7 @@ export class DisciplinaService {
     return disciplina;
   }
 
-  async update({ nome, codigo, nomesCursos }: DisciplinaDTO) {
+  async update({ nome, codigo, cursos }: DisciplinaDTO) {
     const disciplinaExists = await this.prisma.disciplina.findUnique({
       where: {
         codigo,
@@ -88,10 +98,10 @@ export class DisciplinaService {
       },
     });
 
-    nomesCursos.forEach(async (curso) => {
+    cursos.forEach(async (curso) => {
       const cursoExists = await this.prisma.curso.findUnique({
         where: {
-          nome: curso,
+          nome: curso.nome,
         },
       });
 
@@ -106,7 +116,7 @@ export class DisciplinaService {
         data: {
           Curso: {
             connect: {
-              nome: curso,
+              nome: curso.nome,
             },
           },
         },
