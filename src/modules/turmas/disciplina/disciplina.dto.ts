@@ -1,6 +1,8 @@
+import { Curso } from "@prisma/client";
+
 export type DisciplinaDTO = {
   nome: string;
   codigo: string;
-  usuarioCriadorId: string;
-  nomesCursos: Array<string>;
+  username: string;
+  cursos: Array<Curso>;
 };
